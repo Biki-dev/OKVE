@@ -1,12 +1,29 @@
 {
 	"name": "@biki-dev/okve",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"private": false,
 	"type": "module",
 	"description": "Open Knowledge Visualization Engine, a reusable React knowledge graph component.",
 	"main": "./dist/okve.cjs",
 	"module": "./dist/okve.js",
 	"types": "./dist/index.d.ts",
+	"license": "MIT",
+	"keywords": [
+		"react",
+		"graph",
+		"visualization",
+		"knowledge-graph",
+		"d3",
+		"typescript"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Biki-dev/OKVE"
+	},
+	"homepage": "https://github.com/Biki-dev/OKVE#readme",
+	"bugs": {
+		"url": "https://github.com/Biki-dev/OKVE/issues"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
