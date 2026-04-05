@@ -5,13 +5,13 @@ OKVE is a small React component library for rendering interactive knowledge grap
 ## Install
 
 ```bash
-npm install okve
+npm install @biki-dev/okve
 ```
 
 ## Usage
 
 ```tsx
-import { KnowledgeGraph } from 'okve'
+import { KnowledgeGraph } from '@biki-dev/okve'
 
 <KnowledgeGraph
   data={graphData}
