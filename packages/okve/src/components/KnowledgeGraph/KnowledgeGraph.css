@@ -1,0 +1,79 @@
+.okve-graph {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top, rgba(79, 142, 247, 0.22), transparent 36%),
+    linear-gradient(180deg, #0f1117 0%, #0b0d12 100%);
+  color: #e2e8f0;
+  box-shadow: 0 24px 80px rgba(1, 4, 12, 0.45);
+}
+
+.okve-graph__svg {
+  display: block;
+}
+
+.okve-graph__content {
+  cursor: grab;
+}
+
+.okve-graph__content:active {
+  cursor: grabbing;
+}
+
+.okve-edge {
+  stroke: var(--okve-edge-color, #4a5568);
+  stroke-linecap: round;
+  opacity: 0.85;
+  transition: stroke 160ms ease, opacity 160ms ease;
+}
+
+.okve-edge--highlighted {
+  stroke: var(--okve-edge-highlight-color, #f7c94f);
+  opacity: 1;
+}
+
+.okve-edge--dimmed {
+  opacity: 0.12;
+}
+
+.okve-node {
+  fill: var(--okve-node-color, #4f8ef7);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: fill 160ms ease, transform 160ms ease, opacity 160ms ease;
+}
+
+.okve-node--hovered {
+  fill: var(--okve-node-hover-color, #f7c94f);
+}
+
+.okve-node--dimmed {
+  opacity: 0.15;
+}
+
+.okve-label {
+  fill: #e2e8f0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.okve-label--hovered {
+  fill: #fff2bf;
+}
+
+.okve-label--dimmed {
+  opacity: 0.2;
+}
+
+.okve-node-group {
+  transition: opacity 160ms ease;
+}
+
+.okve-node-group--dimmed {
+  opacity: 0.15;
+}

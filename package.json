@@ -1,0 +1,8 @@
+{
+  "name": "okve-monorepo",
+  "private": true,
+  "workspaces": ["packages/*", "demo"],
+  "scripts": {
+    "build": "npm run build -w packages/okve && npm run build -w demo"
+  }
+}

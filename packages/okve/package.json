@@ -1,0 +1,38 @@
+{
+	"name": "okve",
+	"version": "0.1.0",
+	"private": false,
+	"type": "module",
+	"description": "Open Knowledge Visualization Engine, a reusable React knowledge graph component.",
+	"main": "./dist/okve.cjs",
+	"module": "./dist/okve.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/okve.js",
+			"require": "./dist/okve.cjs"
+		}
+	},
+	"files": ["dist"],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite"
+	},
+	"dependencies": {
+		"d3": "^7.9.0"
+	},
+	"peerDependencies": {
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0"
+	},
+	"devDependencies": {
+		"@types/d3": "^7.4.3",
+		"@types/react": "^19.0.0",
+		"@types/react-dom": "^19.0.0",
+		"@vitejs/plugin-react": "^6.0.1",
+		"typescript": "^5.9.3",
+		"vite": "^8.0.1",
+		"vite-plugin-dts": "^4.5.4"
+	}
+}
