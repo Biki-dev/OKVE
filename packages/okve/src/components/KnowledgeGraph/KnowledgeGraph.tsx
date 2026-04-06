@@ -64,6 +64,8 @@ function useZoomPan(
   svgRef: React.RefObject<SVGSVGElement | null>,
   contentRef: React.RefObject<SVGGElement | null>,
 ) {
+  const zoomBehaviorRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null)
+
   useEffect(() => {
     const svgElement = svgRef.current
     const contentElement = contentRef.current
@@ -79,13 +81,46 @@ function useZoomPan(
         d3.select(contentElement).attr('transform', event.transform.toString())
       })
 
+    zoomBehaviorRef.current = zoomBehavior
     const selection = d3.select(svgElement)
     selection.call(zoomBehavior)
 
     return () => {
       selection.on('.zoom', null)
+      zoomBehaviorRef.current = null
     }
   }, [contentRef, svgRef])
+
+  return zoomBehaviorRef
+}
+
+function fitToScreen(
+  svg: SVGSVGElement,
+  zoom: d3.ZoomBehavior<SVGSVGElement, unknown>,
+  nodes: LayoutNode[],
+  width: number,
+  height: number,
+) {
+  if (nodes.length === 0) {
+    return
+  }
+
+  const xs = nodes.map((node) => node.x ?? 0)
+  const ys = nodes.map((node) => node.y ?? 0)
+  const minX = Math.min(...xs)
+  const maxX = Math.max(...xs)
+  const minY = Math.min(...ys)
+  const maxY = Math.max(...ys)
+
+  const padding = 60
+  const scaleX = (width - padding * 2) / (maxX - minX || 1)
+  const scaleY = (height - padding * 2) / (maxY - minY || 1)
+  const scale = Math.min(scaleX, scaleY, 2)
+
+  const tx = width / 2 - ((minX + maxX) / 2) * scale
+  const ty = height / 2 - ((minY + maxY) / 2) * scale
+
+  d3.select(svg).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale))
 }
 
 function useGraphSimulation(data: KnowledgeGraphProps['data'], width: number, height: number) {
@@ -93,10 +128,14 @@ function useGraphSimulation(data: KnowledgeGraphProps['data'], width: number, he
     nodes: [],
     edges: [],
   })
+  const [isSimulationSettled, setIsSimulationSettled] = useState(false)
 
   useEffect(() => {
+    setIsSimulationSettled(false)
+
     if (data.nodes.length === 0) {
       setLayout({ nodes: [], edges: [] })
+      setIsSimulationSettled(true)
       return
     }
 
@@ -125,6 +164,10 @@ function useGraphSimulation(data: KnowledgeGraphProps['data'], width: number, he
     }
 
     simulation.on('tick', updateLayout)
+    simulation.on('end', () => {
+      updateLayout()
+      setIsSimulationSettled(true)
+    })
     updateLayout()
 
     return () => {
@@ -132,7 +175,7 @@ function useGraphSimulation(data: KnowledgeGraphProps['data'], width: number, he
     }
   }, [data, height, width])
 
-  return layout
+  return { layout, isSimulationSettled }
 }
 
 function joinClassNames(...values: Array<string | false | undefined>) {
@@ -145,14 +188,17 @@ export function KnowledgeGraph({
   height = 640,
   onNodeClick,
   onEdgeClick,
+  selectedNodeId,
 }: KnowledgeGraphProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const contentRef = useRef<SVGGElement | null>(null)
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
+  const hasFitToScreenRef = useRef(false)
 
   const { width: renderedWidth, height: renderedHeight } = useElementSize(containerRef)
-  const layout = useGraphSimulation(data, renderedWidth, renderedHeight)
+  const zoomBehaviorRef = useZoomPan(svgRef, contentRef)
+  const { layout, isSimulationSettled } = useGraphSimulation(data, renderedWidth, renderedHeight)
   const highlightState = useMemo(
     () => buildHighlightState(data, hoveredNodeId),
     [data, hoveredNodeId],
@@ -168,7 +214,26 @@ export function KnowledgeGraph({
     [data.edges],
   )
 
-  useZoomPan(svgRef, contentRef)
+  useEffect(() => {
+    if (!isSimulationSettled) {
+      hasFitToScreenRef.current = false
+      return
+    }
+
+    if (hasFitToScreenRef.current) {
+      return
+    }
+
+    const svgElement = svgRef.current
+    const zoomBehavior = zoomBehaviorRef.current
+
+    if (!svgElement || !zoomBehavior || layout.nodes.length === 0) {
+      return
+    }
+
+    fitToScreen(svgElement, zoomBehavior, layout.nodes, renderedWidth, renderedHeight)
+    hasFitToScreenRef.current = true
+  }, [isSimulationSettled, layout.nodes, renderedHeight, renderedWidth, zoomBehaviorRef])
 
   return (
     <div
@@ -252,11 +317,40 @@ export function KnowledgeGraph({
             )
           })}
 
+          {layout.edges.map((edge) => {
+            if (!edge.label) {
+              return null
+            }
+
+            const sourceId = typeof edge.source === 'string' ? edge.source : edge.source.id
+            const targetId = typeof edge.target === 'string' ? edge.target : edge.target.id
+            const sourceNode = layout.nodes.find((node) => node.id === sourceId)
+            const targetNode = layout.nodes.find((node) => node.id === targetId)
+
+            if (!sourceNode || !targetNode) {
+              return null
+            }
+
+            return (
+              <text
+                key={`label-${edge.id}`}
+                x={(sourceNode.x ?? 0) + ((targetNode.x ?? 0) - (sourceNode.x ?? 0)) / 2}
+                y={(sourceNode.y ?? 0) + ((targetNode.y ?? 0) - (sourceNode.y ?? 0)) / 2}
+                className="okve-edge-label"
+                textAnchor="middle"
+                dy="-4"
+              >
+                {edge.label}
+              </text>
+            )
+          })}
+
           {layout.nodes.map((node) => {
             const sourceNode = nodesById.get(node.id) ?? node
             const isHighlighted = hoveredNodeId ? highlightState.highlightedNodeIds.has(node.id) : true
             const isDimmed = hoveredNodeId ? !isHighlighted : false
             const radius = getNodeRadius(sourceNode)
+            const isSelected = selectedNodeId === node.id
 
             return (
               <g
@@ -278,6 +372,7 @@ export function KnowledgeGraph({
                   className={joinClassNames(
                     'okve-node',
                     hoveredNodeId === node.id && 'okve-node--hovered',
+                    isSelected && 'okve-node--selected',
                     isDimmed && 'okve-node--dimmed',
                   )}
                   fill={getGroupColor(sourceNode.group)}

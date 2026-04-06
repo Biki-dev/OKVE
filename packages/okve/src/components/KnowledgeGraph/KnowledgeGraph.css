@@ -37,6 +37,13 @@
   opacity: 0.12;
 }
 
+.okve-edge-label {
+  fill: #718096;
+  font-size: 10px;
+  pointer-events: none;
+  user-select: none;
+}
+
 .okve-node {
   fill: var(--okve-node-color, #4f8ef7);
   stroke: rgba(255, 255, 255, 0.1);
@@ -47,6 +54,12 @@
 
 .okve-node--hovered {
   fill: var(--okve-node-hover-color, #f7c94f);
+}
+
+.okve-node--selected {
+  stroke: #fff;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 6px var(--okve-node-hover-color, #f7c94f));
 }
 
 .okve-node--dimmed {

@@ -12,6 +12,7 @@ export interface GraphEdge {
   target: string
   directed?: boolean
   weight?: number
+  label?: string
 }
 
 export interface GraphData {
@@ -25,4 +26,5 @@ export interface KnowledgeGraphProps {
   height?: number | string
   onNodeClick?: (node: GraphNode) => void
   onEdgeClick?: (edge: GraphEdge) => void
+  selectedNodeId?: string
 }
