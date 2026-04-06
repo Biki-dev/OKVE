@@ -2,6 +2,7 @@ export interface GraphNode {
   id: string
   label: string
   group?: string
+  size?: number
   metadata?: Record<string, unknown>
 }
 
