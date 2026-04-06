@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-import { KnowledgeGraph, type GraphNode } from 'okve'
+import { KnowledgeGraph } from 'okve'
 
 import { sampleData } from './sampleData'
 import './App.css'
@@ -22,7 +22,12 @@ function formatMetadataValue(value: unknown) {
 }
 
 function App() {
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(sampleData.nodes[1] ?? null)
+  const [selectedId, setSelectedId] = useState<string | undefined>(sampleData.nodes[1]?.id)
+
+  const selectedNode = useMemo(
+    () => sampleData.nodes.find((node) => node.id === selectedId) ?? null,
+    [selectedId],
+  )
 
   const selectedMetadata = useMemo(() => {
     const metadataEntries = Object.entries(selectedNode?.metadata ?? {})
@@ -58,9 +63,12 @@ function App() {
         <div className="graph-card">
           <KnowledgeGraph
             data={sampleData}
+            selectedNodeId={selectedId}
             width="100%"
             height="100%"
-            onNodeClick={setSelectedNode}
+            onNodeClick={(node) => {
+              setSelectedId(node.id)
+            }}
           />
         </div>
 
