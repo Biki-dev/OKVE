@@ -86,6 +86,69 @@
   max-width: 1400px;
 }
 
+.control-panel {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+  gap: 18px;
+  margin: 0 auto 24px;
+  max-width: 1400px;
+  padding: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 24px;
+  background: rgba(10, 13, 20, 0.72);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.control-copy .details-copy {
+  margin: 8px 0 0;
+}
+
+.control-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.focus-group {
+  display: grid;
+  gap: 8px;
+}
+
+.focus-group span {
+  color: #90a4c8;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.focus-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.focus-button,
+.export-button {
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.86rem;
+  color: #edf4ff;
+  background: rgba(148, 163, 184, 0.1);
+  cursor: pointer;
+}
+
+.focus-button:hover,
+.export-button:hover {
+  border-color: rgba(247, 201, 79, 0.8);
+  background: rgba(247, 201, 79, 0.16);
+}
+
+.export-button {
+  justify-self: start;
+  margin-top: 4px;
+}
+
 .graph-card {
   min-height: min(74vh, 760px);
   border-radius: 28px;
@@ -157,6 +220,7 @@
   }
 
   .hero-panel,
+  .control-panel,
   .content-grid {
     grid-template-columns: 1fr;
   }

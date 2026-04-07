@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
-import { KnowledgeGraph } from 'okve'
+import { KnowledgeGraph, type GraphNode, type KnowledgeGraphHandle } from 'okve'
 
 import { sampleData } from './sampleData'
 import './App.css'
@@ -22,7 +22,9 @@ function formatMetadataValue(value: unknown) {
 }
 
 function App() {
+  const graphRef = useRef<KnowledgeGraphHandle | null>(null)
   const [selectedId, setSelectedId] = useState<string | undefined>(sampleData.nodes[1]?.id)
+  const [focusNodeId, setFocusNodeId] = useState<string | undefined>(sampleData.nodes[1]?.id)
 
   const selectedNode = useMemo(
     () => sampleData.nodes.find((node) => node.id === selectedId) ?? null,
@@ -37,6 +39,19 @@ function App() {
       value: formatMetadataValue(value),
     }))
   }, [selectedNode])
+
+  const groupedNodes = useMemo(() => {
+    const map = new Map<string, GraphNode[]>()
+
+    for (const node of sampleData.nodes) {
+      const groupName = node.group ?? 'ungrouped'
+      const list = map.get(groupName) ?? []
+      list.push(node)
+      map.set(groupName, list)
+    }
+
+    return Array.from(map.entries())
+  }, [])
 
   return (
     <main className="demo-shell">
@@ -55,19 +70,68 @@ function App() {
         </div>
         <div className="hero-note">
           <p>Use this demo as the default screenshot for the README.</p>
-          <p>Click a node to inspect the metadata that gets passed back to consumers.</p>
+          <p>Click a node to inspect metadata. Press Escape to trigger deselect callback.</p>
+        </div>
+      </section>
+
+      <section className="control-panel" aria-label="Demo controls">
+        <div className="control-copy">
+          <p className="details-label">Programmatic Focus</p>
+          <p className="details-copy">Pick a node and the camera will fly to it using focusNodeId.</p>
+        </div>
+
+        <div className="control-actions">
+          {groupedNodes.map(([group, nodes]) => (
+            <div key={group} className="focus-group">
+              <span>{group}</span>
+              <div className="focus-buttons">
+                {nodes.map((node) => (
+                  <button
+                    key={node.id}
+                    type="button"
+                    className="focus-button"
+                    onClick={() => {
+                      setFocusNodeId(node.id)
+                      setSelectedId(node.id)
+                    }}
+                  >
+                    {node.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="export-button"
+            onClick={() => {
+              graphRef.current?.exportAsPNG('okve-demo-graph.png')
+            }}
+          >
+            Export PNG
+          </button>
         </div>
       </section>
 
       <section className="content-grid">
         <div className="graph-card">
           <KnowledgeGraph
+            ref={graphRef}
             data={sampleData}
             selectedNodeId={selectedId}
+            focusNodeId={focusNodeId}
+            showSearch
+            showGroupFilter
+            showStats
             width="100%"
             height="100%"
             onNodeClick={(node) => {
               setSelectedId(node.id)
+              setFocusNodeId(node.id)
+            }}
+            onDeselect={() => {
+              setSelectedId(undefined)
+              setFocusNodeId(undefined)
             }}
           />
         </div>
