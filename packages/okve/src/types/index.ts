@@ -27,4 +27,6 @@ export interface KnowledgeGraphProps {
   onNodeClick?: (node: GraphNode) => void
   onEdgeClick?: (edge: GraphEdge) => void
   selectedNodeId?: string
+  focusNodeId?: string
+  showSearch?: boolean
 }

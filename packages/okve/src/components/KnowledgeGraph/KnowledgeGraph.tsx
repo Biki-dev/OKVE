@@ -189,12 +189,17 @@ export function KnowledgeGraph({
   onNodeClick,
   onEdgeClick,
   selectedNodeId,
+  focusNodeId,
+  showSearch = false,
 }: KnowledgeGraphProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const contentRef = useRef<SVGGElement | null>(null)
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [internalFocusNodeId, setInternalFocusNodeId] = useState<string | null>(null)
   const hasFitToScreenRef = useRef(false)
+  const lastAnimatedFocusNodeIdRef = useRef<string | null>(null)
 
   const { width: renderedWidth, height: renderedHeight } = useElementSize(containerRef)
   const zoomBehaviorRef = useZoomPan(svgRef, contentRef)
@@ -203,6 +208,19 @@ export function KnowledgeGraph({
     () => buildHighlightState(data, hoveredNodeId),
     [data, hoveredNodeId],
   )
+  const resolvedFocusNodeId = internalFocusNodeId ?? focusNodeId
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return []
+    }
+
+    const query = searchQuery.toLowerCase()
+
+    return data.nodes
+      .filter((node) => node.label.toLowerCase().includes(query))
+      .slice(0, 8)
+  }, [data.nodes, searchQuery])
 
   const nodesById = useMemo(
     () => new Map(data.nodes.map((node) => [node.id, node] as const)),
@@ -235,6 +253,50 @@ export function KnowledgeGraph({
     hasFitToScreenRef.current = true
   }, [isSimulationSettled, layout.nodes, renderedHeight, renderedWidth, zoomBehaviorRef])
 
+  useEffect(() => {
+    setInternalFocusNodeId(null)
+  }, [focusNodeId])
+
+  useEffect(() => {
+    const svgElement = svgRef.current
+    const zoomBehavior = zoomBehaviorRef.current
+
+    if (!resolvedFocusNodeId || !svgElement || !zoomBehavior) {
+      if (!resolvedFocusNodeId) {
+        lastAnimatedFocusNodeIdRef.current = null
+      }
+
+      return
+    }
+
+    const node = layout.nodes.find((layoutNode) => layoutNode.id === resolvedFocusNodeId)
+
+    if (!node || node.x == null || node.y == null) {
+      return
+    }
+
+    if (lastAnimatedFocusNodeIdRef.current === resolvedFocusNodeId) {
+      return
+    }
+
+    const svg = d3.select(svgElement)
+    const scale = 1.8
+
+    svg
+      .transition()
+      .duration(600)
+      .ease(d3.easeCubicInOut)
+      .call(
+        zoomBehavior.transform,
+        d3.zoomIdentity
+          .translate(renderedWidth / 2, renderedHeight / 2)
+          .scale(scale)
+          .translate(-node.x, -node.y),
+      )
+
+    lastAnimatedFocusNodeIdRef.current = resolvedFocusNodeId
+  }, [layout.nodes, renderedHeight, renderedWidth, resolvedFocusNodeId, zoomBehaviorRef])
+
   return (
     <div
       ref={containerRef}
@@ -244,6 +306,35 @@ export function KnowledgeGraph({
         height,
       }}
     >
+      {showSearch && (
+        <div className="okve-search-bar">
+          <input
+            type="text"
+            placeholder="Search nodes..."
+            value={searchQuery}
+            onChange={(event) => {
+              setSearchQuery(event.target.value)
+            }}
+            className="okve-search-input"
+          />
+          {searchResults.length > 0 && (
+            <ul className="okve-search-results">
+              {searchResults.map((node) => (
+                <li
+                  key={node.id}
+                  className="okve-search-result-item"
+                  onClick={() => {
+                    setInternalFocusNodeId(node.id)
+                    onNodeClick?.(node)
+                  }}
+                >
+                  {node.label}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
       <svg
         ref={svgRef}
         className="okve-graph__svg"

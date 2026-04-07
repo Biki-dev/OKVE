@@ -9,6 +9,58 @@
   box-shadow: 0 24px 80px rgba(1, 4, 12, 0.45);
 }
 
+.okve-search-bar {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  width: min(300px, calc(100% - 28px));
+}
+
+.okve-search-input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e2e8f0;
+  font-size: 14px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.okve-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.okve-search-input:focus {
+  border-color: rgba(247, 201, 79, 0.75);
+  box-shadow: 0 0 0 3px rgba(247, 201, 79, 0.2);
+}
+
+.okve-search-results {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.95);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.okve-search-result-item {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
+.okve-search-result-item:hover {
+  background: rgba(148, 163, 184, 0.16);
+}
+
 .okve-graph__svg {
   display: block;
 }
