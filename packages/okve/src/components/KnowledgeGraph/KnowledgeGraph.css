@@ -61,6 +61,56 @@
   background: rgba(148, 163, 184, 0.16);
 }
 
+.okve-group-filter {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  max-width: min(50%, 420px);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.okve-group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #4f8ef7;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #dbeafe;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.okve-group-chip--hidden {
+  opacity: 0.45;
+}
+
+.okve-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.okve-stats {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(2, 6, 23, 0.75);
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
 .okve-graph__svg {
   display: block;
 }

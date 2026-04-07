@@ -29,4 +29,11 @@ export interface KnowledgeGraphProps {
   selectedNodeId?: string
   focusNodeId?: string
   showSearch?: boolean
+  showGroupFilter?: boolean
+  onDeselect?: () => void
+  showStats?: boolean
+}
+
+export interface KnowledgeGraphHandle {
+  exportAsPNG: (filename?: string) => void
 }

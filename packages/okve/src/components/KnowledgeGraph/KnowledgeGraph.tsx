@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
-import type { GraphEdge, GraphNode, KnowledgeGraphProps } from '../../types'
+import type { GraphEdge, GraphNode, KnowledgeGraphHandle, KnowledgeGraphProps } from '../../types'
 import { buildHighlightState, seedNodePositions } from '../../utils/graphLayout'
 import { getGroupColor } from '../../utils/colorPalette'
 import './KnowledgeGraph.css'
@@ -182,184 +182,328 @@ function joinClassNames(...values: Array<string | false | undefined>) {
   return values.filter(Boolean).join(' ')
 }
 
-export function KnowledgeGraph({
-  data,
-  width = '100%',
-  height = 640,
-  onNodeClick,
-  onEdgeClick,
-  selectedNodeId,
-  focusNodeId,
-  showSearch = false,
-}: KnowledgeGraphProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const svgRef = useRef<SVGSVGElement | null>(null)
-  const contentRef = useRef<SVGGElement | null>(null)
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [internalFocusNodeId, setInternalFocusNodeId] = useState<string | null>(null)
-  const hasFitToScreenRef = useRef(false)
-  const lastAnimatedFocusNodeIdRef = useRef<string | null>(null)
+export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphProps>(
+  function KnowledgeGraph(
+    {
+      data,
+      width = '100%',
+      height = 640,
+      onNodeClick,
+      onEdgeClick,
+      selectedNodeId,
+      focusNodeId,
+      showSearch = false,
+      showGroupFilter = false,
+      onDeselect,
+      showStats = false,
+    },
+    ref,
+  ) {
+    const containerRef = useRef<HTMLDivElement | null>(null)
+    const svgRef = useRef<SVGSVGElement | null>(null)
+    const contentRef = useRef<SVGGElement | null>(null)
+    const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [hiddenGroups, setHiddenGroups] = useState<Set<string>>(new Set())
+    const [internalFocusNodeId, setInternalFocusNodeId] = useState<string | null>(null)
+    const hasFitToScreenRef = useRef(false)
+    const lastAnimatedFocusNodeIdRef = useRef<string | null>(null)
 
-  const { width: renderedWidth, height: renderedHeight } = useElementSize(containerRef)
-  const zoomBehaviorRef = useZoomPan(svgRef, contentRef)
-  const { layout, isSimulationSettled } = useGraphSimulation(data, renderedWidth, renderedHeight)
-  const highlightState = useMemo(
-    () => buildHighlightState(data, hoveredNodeId),
-    [data, hoveredNodeId],
-  )
-  const resolvedFocusNodeId = internalFocusNodeId ?? focusNodeId
+    const groups = useMemo(
+      () =>
+        Array.from(
+          new Set(
+            data.nodes
+              .map((node) => node.group)
+              .filter((group): group is string => Boolean(group && group.trim())),
+          ),
+        ),
+      [data.nodes],
+    )
 
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return []
-    }
+    const visibleNodes = useMemo(
+      () => data.nodes.filter((node) => !node.group || !hiddenGroups.has(node.group)),
+      [data.nodes, hiddenGroups],
+    )
 
-    const query = searchQuery.toLowerCase()
+    const visibleNodeIdSet = useMemo(
+      () => new Set(visibleNodes.map((node) => node.id)),
+      [visibleNodes],
+    )
 
-    return data.nodes
-      .filter((node) => node.label.toLowerCase().includes(query))
-      .slice(0, 8)
-  }, [data.nodes, searchQuery])
+    const visibleEdges = useMemo(
+      () =>
+        data.edges.filter(
+          (edge) => visibleNodeIdSet.has(edge.source) && visibleNodeIdSet.has(edge.target),
+        ),
+      [data.edges, visibleNodeIdSet],
+    )
 
-  const nodesById = useMemo(
-    () => new Map(data.nodes.map((node) => [node.id, node] as const)),
-    [data.nodes],
-  )
+    const filteredData = useMemo(
+      () => ({ nodes: visibleNodes, edges: visibleEdges }),
+      [visibleEdges, visibleNodes],
+    )
 
-  const edgesById = useMemo(
-    () => new Map(data.edges.map((edge) => [edge.id, edge] as const)),
-    [data.edges],
-  )
+    const { width: renderedWidth, height: renderedHeight } = useElementSize(containerRef)
+    const zoomBehaviorRef = useZoomPan(svgRef, contentRef)
+    const { layout, isSimulationSettled } = useGraphSimulation(filteredData, renderedWidth, renderedHeight)
+    const highlightState = useMemo(
+      () => buildHighlightState(filteredData, hoveredNodeId),
+      [filteredData, hoveredNodeId],
+    )
+    const resolvedFocusNodeId = internalFocusNodeId ?? focusNodeId
 
-  useEffect(() => {
-    if (!isSimulationSettled) {
-      hasFitToScreenRef.current = false
-      return
-    }
-
-    if (hasFitToScreenRef.current) {
-      return
-    }
-
-    const svgElement = svgRef.current
-    const zoomBehavior = zoomBehaviorRef.current
-
-    if (!svgElement || !zoomBehavior || layout.nodes.length === 0) {
-      return
-    }
-
-    fitToScreen(svgElement, zoomBehavior, layout.nodes, renderedWidth, renderedHeight)
-    hasFitToScreenRef.current = true
-  }, [isSimulationSettled, layout.nodes, renderedHeight, renderedWidth, zoomBehaviorRef])
-
-  useEffect(() => {
-    setInternalFocusNodeId(null)
-  }, [focusNodeId])
-
-  useEffect(() => {
-    const svgElement = svgRef.current
-    const zoomBehavior = zoomBehaviorRef.current
-
-    if (!resolvedFocusNodeId || !svgElement || !zoomBehavior) {
-      if (!resolvedFocusNodeId) {
-        lastAnimatedFocusNodeIdRef.current = null
+    const searchResults = useMemo(() => {
+      if (!searchQuery.trim()) {
+        return []
       }
 
-      return
+      const query = searchQuery.toLowerCase()
+
+      return visibleNodes
+        .filter((node) => node.label.toLowerCase().includes(query))
+        .slice(0, 8)
+    }, [searchQuery, visibleNodes])
+
+    const nodesById = useMemo(
+      () => new Map(filteredData.nodes.map((node) => [node.id, node] as const)),
+      [filteredData.nodes],
+    )
+
+    const edgesById = useMemo(
+      () => new Map(filteredData.edges.map((edge) => [edge.id, edge] as const)),
+      [filteredData.edges],
+    )
+
+    useImperativeHandle(ref, () => ({
+      exportAsPNG(filename = 'graph.png') {
+        const svg = svgRef.current
+
+        if (!svg) {
+          return
+        }
+
+        const serializer = new XMLSerializer()
+        const svgString = serializer.serializeToString(svg)
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+
+        const image = new Image()
+        image.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = renderedWidth * 2
+          canvas.height = renderedHeight * 2
+
+          const context = canvas.getContext('2d')
+          if (!context) {
+            URL.revokeObjectURL(url)
+            return
+          }
+
+          context.scale(2, 2)
+          context.drawImage(image, 0, 0, renderedWidth, renderedHeight)
+          URL.revokeObjectURL(url)
+
+          const link = document.createElement('a')
+          link.download = filename
+          link.href = canvas.toDataURL('image/png')
+          link.click()
+        }
+
+        image.onerror = () => {
+          URL.revokeObjectURL(url)
+        }
+
+        image.src = url
+      },
+    }), [renderedHeight, renderedWidth])
+
+    useEffect(() => {
+      if (!isSimulationSettled) {
+        hasFitToScreenRef.current = false
+        return
+      }
+
+      if (hasFitToScreenRef.current) {
+        return
+      }
+
+      const svgElement = svgRef.current
+      const zoomBehavior = zoomBehaviorRef.current
+
+      if (!svgElement || !zoomBehavior || layout.nodes.length === 0) {
+        return
+      }
+
+      fitToScreen(svgElement, zoomBehavior, layout.nodes, renderedWidth, renderedHeight)
+      hasFitToScreenRef.current = true
+    }, [isSimulationSettled, layout.nodes, renderedHeight, renderedWidth, zoomBehaviorRef])
+
+    useEffect(() => {
+      setInternalFocusNodeId(null)
+    }, [focusNodeId])
+
+    useEffect(() => {
+      const handler = (event: KeyboardEvent) => {
+        if (event.key !== 'Escape') {
+          return
+        }
+
+        setHoveredNodeId(null)
+        setInternalFocusNodeId(null)
+        onDeselect?.()
+      }
+
+      window.addEventListener('keydown', handler)
+      return () => {
+        window.removeEventListener('keydown', handler)
+      }
+    }, [onDeselect])
+
+    useEffect(() => {
+      const svgElement = svgRef.current
+      const zoomBehavior = zoomBehaviorRef.current
+
+      if (!resolvedFocusNodeId || !svgElement || !zoomBehavior) {
+        if (!resolvedFocusNodeId) {
+          lastAnimatedFocusNodeIdRef.current = null
+        }
+
+        return
+      }
+
+      const node = layout.nodes.find((layoutNode) => layoutNode.id === resolvedFocusNodeId)
+
+      if (!node || node.x == null || node.y == null) {
+        return
+      }
+
+      if (lastAnimatedFocusNodeIdRef.current === resolvedFocusNodeId) {
+        return
+      }
+
+      const svg = d3.select(svgElement)
+      const scale = 1.8
+
+      svg
+        .transition()
+        .duration(600)
+        .ease(d3.easeCubicInOut)
+        .call(
+          zoomBehavior.transform,
+          d3.zoomIdentity
+            .translate(renderedWidth / 2, renderedHeight / 2)
+            .scale(scale)
+            .translate(-node.x, -node.y),
+        )
+
+      lastAnimatedFocusNodeIdRef.current = resolvedFocusNodeId
+    }, [layout.nodes, renderedHeight, renderedWidth, resolvedFocusNodeId, zoomBehaviorRef])
+
+    const toggleGroup = (group: string) => {
+      setHiddenGroups((previous) => {
+        const next = new Set(previous)
+
+        if (next.has(group)) {
+          next.delete(group)
+        } else {
+          next.add(group)
+        }
+
+        return next
+      })
     }
 
-    const node = layout.nodes.find((layoutNode) => layoutNode.id === resolvedFocusNodeId)
-
-    if (!node || node.x == null || node.y == null) {
-      return
-    }
-
-    if (lastAnimatedFocusNodeIdRef.current === resolvedFocusNodeId) {
-      return
-    }
-
-    const svg = d3.select(svgElement)
-    const scale = 1.8
-
-    svg
-      .transition()
-      .duration(600)
-      .ease(d3.easeCubicInOut)
-      .call(
-        zoomBehavior.transform,
-        d3.zoomIdentity
-          .translate(renderedWidth / 2, renderedHeight / 2)
-          .scale(scale)
-          .translate(-node.x, -node.y),
-      )
-
-    lastAnimatedFocusNodeIdRef.current = resolvedFocusNodeId
-  }, [layout.nodes, renderedHeight, renderedWidth, resolvedFocusNodeId, zoomBehaviorRef])
-
-  return (
-    <div
-      ref={containerRef}
-      className="okve-graph"
-      style={{
-        width,
-        height,
-      }}
-    >
-      {showSearch && (
-        <div className="okve-search-bar">
-          <input
-            type="text"
-            placeholder="Search nodes..."
-            value={searchQuery}
-            onChange={(event) => {
-              setSearchQuery(event.target.value)
-            }}
-            className="okve-search-input"
-          />
-          {searchResults.length > 0 && (
-            <ul className="okve-search-results">
-              {searchResults.map((node) => (
-                <li
-                  key={node.id}
-                  className="okve-search-result-item"
-                  onClick={() => {
-                    setInternalFocusNodeId(node.id)
-                    onNodeClick?.(node)
-                  }}
-                >
-                  {node.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-      <svg
-        ref={svgRef}
-        className="okve-graph__svg"
-        width="100%"
-        height="100%"
-        viewBox={`0 0 ${renderedWidth} ${renderedHeight}`}
-        preserveAspectRatio="xMidYMid meet"
-        role="img"
-        aria-label="Interactive knowledge graph"
+    return (
+      <div
+        ref={containerRef}
+        className="okve-graph"
+        style={{
+          width,
+          height,
+        }}
       >
-        <defs>
-          <marker
-            id={ARROWHEAD_ID}
-            markerWidth="10"
-            markerHeight="10"
-            refX="8"
-            refY="5"
-            orient="auto"
-            markerUnits="strokeWidth"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-        </defs>
-        <g ref={contentRef} className="okve-graph__content">
-          {layout.edges.map((edge) => {
+        {showSearch && (
+          <div className="okve-search-bar">
+            <input
+              type="text"
+              placeholder="Search nodes..."
+              value={searchQuery}
+              onChange={(event) => {
+                setSearchQuery(event.target.value)
+              }}
+              className="okve-search-input"
+            />
+            {searchResults.length > 0 && (
+              <ul className="okve-search-results">
+                {searchResults.map((node) => (
+                  <li
+                    key={node.id}
+                    className="okve-search-result-item"
+                    onClick={() => {
+                      setInternalFocusNodeId(node.id)
+                      onNodeClick?.(node)
+                    }}
+                  >
+                    {node.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+        {showGroupFilter && groups.length > 0 && (
+          <div className="okve-group-filter">
+            {groups.map((group) => (
+              <button
+                key={group}
+                type="button"
+                className={joinClassNames(
+                  'okve-group-chip',
+                  hiddenGroups.has(group) && 'okve-group-chip--hidden',
+                )}
+                onClick={() => {
+                  toggleGroup(group)
+                }}
+                style={{ borderColor: getGroupColor(group) }}
+              >
+                <span className="okve-chip-dot" style={{ background: getGroupColor(group) }} />
+                {group}
+              </button>
+            ))}
+          </div>
+        )}
+        {showStats && (
+          <div className="okve-stats" aria-label="Graph stats">
+            <span>{data.nodes.length} nodes</span>
+            <span>{data.edges.length} edges</span>
+          </div>
+        )}
+        <svg
+          ref={svgRef}
+          className="okve-graph__svg"
+          width="100%"
+          height="100%"
+          viewBox={`0 0 ${renderedWidth} ${renderedHeight}`}
+          preserveAspectRatio="xMidYMid meet"
+          role="img"
+          aria-label="Interactive knowledge graph"
+        >
+          <defs>
+            <marker
+              id={ARROWHEAD_ID}
+              markerWidth="10"
+              markerHeight="10"
+              refX="8"
+              refY="5"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
+          <g ref={contentRef} className="okve-graph__content">
+            {layout.edges.map((edge) => {
             const sourceId = typeof edge.source === 'string' ? edge.source : edge.source.id
             const targetId = typeof edge.target === 'string' ? edge.target : edge.target.id
             const sourceNode = layout.nodes.find((node) => node.id === sourceId)
@@ -408,7 +552,7 @@ export function KnowledgeGraph({
             )
           })}
 
-          {layout.edges.map((edge) => {
+            {layout.edges.map((edge) => {
             if (!edge.label) {
               return null
             }
@@ -436,7 +580,7 @@ export function KnowledgeGraph({
             )
           })}
 
-          {layout.nodes.map((node) => {
+            {layout.nodes.map((node) => {
             const sourceNode = nodesById.get(node.id) ?? node
             const isHighlighted = hoveredNodeId ? highlightState.highlightedNodeIds.has(node.id) : true
             const isDimmed = hoveredNodeId ? !isHighlighted : false
@@ -483,9 +627,12 @@ export function KnowledgeGraph({
                 <title>{sourceNode.label}</title>
               </g>
             )
-          })}
-        </g>
-      </svg>
-    </div>
-  )
-}
+            })}
+          </g>
+        </svg>
+      </div>
+    )
+  },
+)
+
+KnowledgeGraph.displayName = 'KnowledgeGraph'
