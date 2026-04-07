@@ -1,3 +1,17 @@
+## [0.3.0] - 2026-04-07
+
+### Added
+- Programmatic camera focus via `focusNodeId`
+- Optional in-graph search UI via `showSearch`
+- Optional group filter chips via `showGroupFilter`
+- Keyboard deselect callback via `onDeselect` (Escape key)
+- Optional stats overlay via `showStats`
+- Imperative ref handle `KnowledgeGraphHandle` with `exportAsPNG(filename?)`
+- Demo controls for focus, filtering, deselect behavior, stats, and PNG export
+
+### Notes
+- PNG export quality and SVG style capture across environments will receive additional hardening in a later update.
+
 ## v0.2.0 - Richer Nodes & Edges
 
 ### Added
