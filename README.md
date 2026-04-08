@@ -1,4 +1,5 @@
 # OKVE
+<img width="1784" height="777" alt="image" src="https://github.com/user-attachments/assets/732ee0d0-ac74-4c6e-b817-66a3f76c80c0" />
 
 OKVE is a React component library for rendering interactive knowledge graphs from JSON data.
 
@@ -130,15 +131,12 @@ type GraphData = {
 
 ## Demo
 
-See the Vite demo in [demo/src/App.tsx](demo/src/App.tsx) for a complete example with click details, selected state, and labeled edges.
+See the demo in [DEMO](https://okve.vercel.app/demo) for a complete example with click details, selected state, and labeled edges.
 
 ## Known Notes
 
 - PNG export is available in v0.3, but some environments may not fully preserve SVG-driven edge styling. A dedicated hardening pass is planned in a later release.
 
-## Contributing
-
-Use the workspace demo to verify graph behavior, then run the package build before publishing.
 
 ## License
 
