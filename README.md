@@ -1,4 +1,4 @@
-# OKVE
+<img src="docs/public/textlogo.png" alt="Repo Logo" style="height:5em; vertical-align:middle;">
 <img width="1784" height="777" alt="image" src="https://github.com/user-attachments/assets/732ee0d0-ac74-4c6e-b817-66a3f76c80c0" />
 
 OKVE is a React component library for rendering interactive knowledge graphs from JSON data.
