@@ -9,10 +9,6 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@biki-dev/okve": ["../packages/okve/src/index.ts"]
-    },
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
