@@ -7,15 +7,18 @@ const okvePkgPath = fileURLToPath(new URL('../packages/okve/package.json', impor
 const okveVersion = JSON.parse(readFileSync(okvePkgPath, 'utf-8')).version as string
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
   define: {
     __OKVE_VERSION__: JSON.stringify(okveVersion),
   },
   resolve: {
-    alias: {
-      // Use local workspace source to avoid CJS/ESM mismatch in published bundle during dev.
-      '@biki-dev/okve': fileURLToPath(new URL('../packages/okve/src/index.ts', import.meta.url)),
-    },
+    alias:
+      command === 'serve'
+        ? {
+            // Use local workspace source during dev only.
+            '@biki-dev/okve': fileURLToPath(new URL('../packages/okve/src/index.ts', import.meta.url)),
+          }
+        : undefined,
   },
-})
+}))
