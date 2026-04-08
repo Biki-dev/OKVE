@@ -48,8 +48,7 @@ npm run build
 ```
 packages/
   okve/        # The @biki-dev/okve component library
-demo/          # Demo application
-docs/          # Documentation assets
+docs/          # Demo and Documentation website
 ```
 
 ## Making Changes
@@ -66,7 +65,6 @@ docs/          # Documentation assets
    npm run build
    ```
 4. Update documentation (README, JSDoc, etc.) if your change affects the public API or component props.
-5. Update `CHANGELOG.md` with a brief description of your change under an `Unreleased` section.
 
 ## Submitting a Pull Request
 
