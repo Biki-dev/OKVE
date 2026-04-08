@@ -1119,6 +1119,26 @@ code {
   border-color: color-mix(in hsl, var(--accent) 45%, var(--border));
 }
 
+.chip--active {
+  border-color: color-mix(in hsl, var(--accent) 60%, var(--border));
+  background: color-mix(in hsl, var(--accent-soft) 58%, var(--bg-tertiary));
+  color: var(--text);
+}
+
+.tooltip-controls {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.tooltip-controls-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
 .demo-export {
   border: 1px solid color-mix(in hsl, var(--accent) 40%, var(--border));
   background: linear-gradient(135deg, #6f42ff, #5d33ea);

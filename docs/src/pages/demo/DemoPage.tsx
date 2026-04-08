@@ -1,6 +1,22 @@
 import { useMemo, useRef, useState } from 'react'
-import { KnowledgeGraph, type GraphNode, type KnowledgeGraphHandle } from '@biki-dev/okve'
+import {
+  KnowledgeGraph,
+  type EdgeTooltipField,
+  type GraphNode,
+  type KnowledgeGraphHandle,
+  type NodeTooltipField,
+  type TooltipOptions,
+} from '@biki-dev/okve'
 import { sampleData } from '../../data/sampleData'
+
+const NODE_FIELDS: NodeTooltipField[] = ['id', 'group', 'size', 'metadata']
+const EDGE_FIELDS: EdgeTooltipField[] = ['id', 'label', 'weight', 'directed', 'metadata']
+const METADATA_KEYS = Array.from(
+  new Set([
+    ...sampleData.nodes.flatMap((node) => Object.keys(node.metadata ?? {})),
+    ...sampleData.edges.flatMap((edge) => Object.keys(edge.metadata ?? {})),
+  ]),
+)
 
 function formatMetadataValue(value: unknown) {
   if (typeof value === 'string') return value
@@ -13,6 +29,9 @@ export function DemoPage() {
   const graphRef = useRef<KnowledgeGraphHandle | null>(null)
   const [selectedId, setSelectedId] = useState<string | undefined>(sampleData.nodes[0]?.id)
   const [focusNodeId, setFocusNodeId] = useState<string | undefined>(sampleData.nodes[0]?.id)
+  const [nodeTooltipFields, setNodeTooltipFields] = useState<NodeTooltipField[]>(NODE_FIELDS)
+  const [edgeTooltipFields, setEdgeTooltipFields] = useState<EdgeTooltipField[]>(EDGE_FIELDS)
+  const [metadataKeys, setMetadataKeys] = useState<string[]>(METADATA_KEYS)
 
   const selectedNode = useMemo(
     () => sampleData.nodes.find((node) => node.id === selectedId) ?? null,
@@ -29,6 +48,34 @@ export function DemoPage() {
     }
     return Array.from(map.entries())
   }, [])
+
+  const tooltipOptions = useMemo<TooltipOptions>(
+    () => ({
+      nodeFields: nodeTooltipFields,
+      edgeFields: edgeTooltipFields,
+      metadataKeys,
+      maxRows: 6,
+    }),
+    [edgeTooltipFields, metadataKeys, nodeTooltipFields],
+  )
+
+  const toggleNodeField = (field: NodeTooltipField) => {
+    setNodeTooltipFields((previous) =>
+      previous.includes(field) ? previous.filter((value) => value !== field) : [...previous, field],
+    )
+  }
+
+  const toggleEdgeField = (field: EdgeTooltipField) => {
+    setEdgeTooltipFields((previous) =>
+      previous.includes(field) ? previous.filter((value) => value !== field) : [...previous, field],
+    )
+  }
+
+  const toggleMetadataKey = (key: string) => {
+    setMetadataKeys((previous) =>
+      previous.includes(key) ? previous.filter((value) => value !== key) : [...previous, key],
+    )
+  }
 
   return (
     <main className="home demo-page">
@@ -58,7 +105,7 @@ export function DemoPage() {
       </section>
 
       <section className="panel demo-controls">
-        <div className="panel-title">Focus Controls</div>
+        <div className="panel-title">Focus and Tooltip Controls</div>
         <div className="demo-controls-body">
         {groupedNodes.map(([group, nodes]) => (
           <div key={group} className="control-group">
@@ -87,6 +134,56 @@ export function DemoPage() {
           >
             Export PNG
           </button>
+
+          <div className="tooltip-controls">
+            <p className="tooltip-controls-title">Node tooltip fields</p>
+            <div className="chip-row">
+              {NODE_FIELDS.map((field) => (
+                <button
+                  key={`node-${field}`}
+                  type="button"
+                  className={`chip ${nodeTooltipFields.includes(field) ? 'chip--active' : ''}`}
+                  onClick={() => {
+                    toggleNodeField(field)
+                  }}
+                >
+                  {field}
+                </button>
+              ))}
+            </div>
+
+            <p className="tooltip-controls-title">Edge tooltip fields</p>
+            <div className="chip-row">
+              {EDGE_FIELDS.map((field) => (
+                <button
+                  key={`edge-${field}`}
+                  type="button"
+                  className={`chip ${edgeTooltipFields.includes(field) ? 'chip--active' : ''}`}
+                  onClick={() => {
+                    toggleEdgeField(field)
+                  }}
+                >
+                  {field}
+                </button>
+              ))}
+            </div>
+
+            <p className="tooltip-controls-title">Metadata keys</p>
+            <div className="chip-row">
+              {METADATA_KEYS.map((key) => (
+                <button
+                  key={`metadata-${key}`}
+                  type="button"
+                  className={`chip ${metadataKeys.includes(key) ? 'chip--active' : ''}`}
+                  onClick={() => {
+                    toggleMetadataKey(key)
+                  }}
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -101,6 +198,8 @@ export function DemoPage() {
             showSearch
             showGroupFilter
             showStats
+            showTooltips
+            tooltipOptions={tooltipOptions}
             height={520}
             onNodeClick={(node: GraphNode) => {
               setSelectedId(node.id)

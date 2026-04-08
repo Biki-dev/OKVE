@@ -13,6 +13,24 @@ const [focusNodeId, setFocusNodeId] = useState<string>()
   }}
 />`
 
+const tooltipExample = `<KnowledgeGraph
+  data={data}
+  showTooltips
+  onNodeClick={(node) => console.log('Node:', node.label)}
+  onEdgeClick={(edge) => console.log('Edge:', edge.source, '->', edge.target)}
+/>`
+
+const tooltipFieldsExample = `<KnowledgeGraph
+  data={data}
+  showTooltips
+  tooltipOptions={{
+    nodeFields: ['group', 'metadata'],
+    edgeFields: ['label', 'metadata'],
+    metadataKeys: ['description', 'takeaway'],
+    maxRows: 4,
+  }}
+/>`
+
 export function Examples() {
   return (
     <article className="doc-article">
@@ -35,6 +53,19 @@ export function Examples() {
         <p>
           Use <code>selectedNodeId</code> for selection state and <code>focusNodeId</code> when you
           want the camera to center on a specific node from outside the graph.
+        </p>
+      </section>
+      <section id="tooltips">
+        <h2>Enable built-in tooltips</h2>
+        <CodeBlock code={tooltipExample} lang="tsx" />
+        <p>
+          With <code>showTooltips</code> enabled, node hover shows an unpinned tooltip, node click
+          pins it, and edge click opens a pinned edge tooltip.
+        </p>
+        <CodeBlock code={tooltipFieldsExample} lang="tsx" />
+        <p>
+          Use <code>tooltipOptions</code> when you want users to see only selected fields such as
+          group, label, or a subset of metadata keys.
         </p>
       </section>
       <section id="workflow">

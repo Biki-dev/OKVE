@@ -192,3 +192,95 @@
 .okve-node-group--dimmed {
   opacity: 0.15;
 }
+
+.okve-tooltip {
+  position: absolute;
+  width: 220px;
+  max-width: calc(100% - 16px);
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.95);
+  color: #e2e8f0;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.okve-tooltip--pinned {
+  border-color: rgba(247, 201, 79, 0.85);
+  box-shadow: 0 0 0 1px rgba(247, 201, 79, 0.35), 0 16px 36px rgba(0, 0, 0, 0.42);
+  pointer-events: auto;
+}
+
+.okve-tooltip__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.okve-tooltip__title {
+  font-size: 13px;
+  line-height: 1.3;
+  color: #f8fafc;
+  word-break: break-word;
+}
+
+.okve-tooltip__close {
+  border: 0;
+  border-radius: 6px;
+  background: rgba(148, 163, 184, 0.16);
+  color: #f1f5f9;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.okve-tooltip__close:hover {
+  background: rgba(148, 163, 184, 0.28);
+}
+
+.okve-tooltip__badge {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(79, 142, 247, 0.2);
+  border: 1px solid rgba(79, 142, 247, 0.45);
+  color: #dbeafe;
+  font-size: 11px;
+}
+
+.okve-tooltip__meta {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.okve-tooltip__meta-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.okve-tooltip__meta-row dt {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.okve-tooltip__meta-row dd {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

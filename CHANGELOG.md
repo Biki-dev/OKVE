@@ -1,3 +1,13 @@
+## [0.4.0] - 2026-04-08
+
+### Added
+- Node hover and click-to-pin tooltip showing label, group, and metadata.
+- Edge click tooltip showing source, target, label, and metadata.
+- `showTooltips` prop (default `false`) to opt into built-in tooltips.
+- Tooltip auto-positioning to stay within graph container bounds.
+- `tooltipOptions` prop to configure which fields appear in node and edge tooltips.
+- Demo controls to toggle node/edge tooltip fields interactively.
+
 ## [0.3.2] - 2026-04-08
 
 ### Fixed

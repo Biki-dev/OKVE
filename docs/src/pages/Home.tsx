@@ -139,7 +139,7 @@ export function Home() {
       <section className="panel panel-preview reveal-y">
         <div className="panel-title">Live Preview</div>
         <div className="graph-preview animate-fade-in">
-          <KnowledgeGraph data={sampleData} height={440} showSearch showStats />
+          <KnowledgeGraph data={sampleData} height={440} showSearch showStats showTooltips />
         </div>
       </section>
 

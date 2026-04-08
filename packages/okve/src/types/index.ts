@@ -21,6 +21,16 @@ export interface GraphData {
   edges: GraphEdge[]
 }
 
+export type NodeTooltipField = 'id' | 'group' | 'size' | 'metadata'
+export type EdgeTooltipField = 'id' | 'label' | 'weight' | 'directed' | 'metadata'
+
+export interface TooltipOptions {
+  nodeFields?: NodeTooltipField[]
+  edgeFields?: EdgeTooltipField[]
+  metadataKeys?: string[]
+  maxRows?: number
+}
+
 export interface KnowledgeGraphProps {
   data: GraphData
   width?: number | string
@@ -33,6 +43,8 @@ export interface KnowledgeGraphProps {
   showGroupFilter?: boolean
   onDeselect?: () => void
   showStats?: boolean
+  showTooltips?: boolean
+  tooltipOptions?: TooltipOptions
 }
 
 export interface KnowledgeGraphHandle {

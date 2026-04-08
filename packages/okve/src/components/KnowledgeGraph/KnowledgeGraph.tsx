@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 import type { GraphEdge, GraphNode, KnowledgeGraphHandle, KnowledgeGraphProps } from '../../types'
 import { buildHighlightState, seedNodePositions } from '../../utils/graphLayout'
 import { getGroupColor } from '../../utils/colorPalette'
+import { Tooltip } from './Tooltip'
 import './KnowledgeGraph.css'
 
 type LayoutNode = GraphNode & d3.SimulationNodeDatum
@@ -17,6 +18,32 @@ const DEFAULT_WIDTH = 960
 const DEFAULT_HEIGHT = 640
 const NODE_BASE_RADIUS = 8
 const ARROWHEAD_ID = 'okve-arrowhead'
+
+type TooltipState = {
+  type: 'node' | 'edge'
+  data: GraphNode | GraphEdge
+  x: number
+  y: number
+  pinned: boolean
+}
+
+function getTooltipPosition(
+  nodeX: number,
+  nodeY: number,
+  transform: d3.ZoomTransform,
+  containerWidth: number,
+  containerHeight: number,
+): { x: number; y: number } {
+  const screenX = transform.applyX(nodeX)
+  const screenY = transform.applyY(nodeY)
+  const tooltipW = 220
+  const tooltipH = 140
+
+  return {
+    x: Math.max(8, Math.min(screenX + 16, containerWidth - tooltipW - 8)),
+    y: Math.max(8, Math.min(screenY - 20, containerHeight - tooltipH - 8)),
+  }
+}
 
 function getNodeRadius(node: GraphNode) {
   return NODE_BASE_RADIUS * (node.size ?? 1)
@@ -63,6 +90,7 @@ function useElementSize(elementRef: React.RefObject<HTMLDivElement | null>) {
 function useZoomPan(
   svgRef: React.RefObject<SVGSVGElement | null>,
   contentRef: React.RefObject<SVGGElement | null>,
+  transformRef: React.MutableRefObject<d3.ZoomTransform>,
 ) {
   const zoomBehaviorRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null)
 
@@ -78,18 +106,21 @@ function useZoomPan(
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.5, 4])
       .on('zoom', (event) => {
+        transformRef.current = event.transform
         d3.select(contentElement).attr('transform', event.transform.toString())
       })
 
     zoomBehaviorRef.current = zoomBehavior
+    transformRef.current = d3.zoomIdentity
     const selection = d3.select(svgElement)
     selection.call(zoomBehavior)
 
     return () => {
       selection.on('.zoom', null)
       zoomBehaviorRef.current = null
+      transformRef.current = d3.zoomIdentity
     }
-  }, [contentRef, svgRef])
+  }, [contentRef, svgRef, transformRef])
 
   return zoomBehaviorRef
 }
@@ -196,6 +227,8 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
       showGroupFilter = false,
       onDeselect,
       showStats = false,
+      showTooltips = false,
+      tooltipOptions,
     },
     ref,
   ) {
@@ -206,8 +239,10 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
     const [searchQuery, setSearchQuery] = useState('')
     const [hiddenGroups, setHiddenGroups] = useState<Set<string>>(new Set())
     const [internalFocusNodeId, setInternalFocusNodeId] = useState<string | null>(null)
+    const [tooltip, setTooltip] = useState<TooltipState | null>(null)
     const hasFitToScreenRef = useRef(false)
     const lastAnimatedFocusNodeIdRef = useRef<string | null>(null)
+    const zoomTransformRef = useRef<d3.ZoomTransform>(d3.zoomIdentity)
 
     const groups = useMemo(
       () =>
@@ -245,7 +280,7 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
     )
 
     const { width: renderedWidth, height: renderedHeight } = useElementSize(containerRef)
-    const zoomBehaviorRef = useZoomPan(svgRef, contentRef)
+    const zoomBehaviorRef = useZoomPan(svgRef, contentRef, zoomTransformRef)
     const { layout, isSimulationSettled } = useGraphSimulation(filteredData, renderedWidth, renderedHeight)
     const highlightState = useMemo(
       () => buildHighlightState(filteredData, hoveredNodeId),
@@ -351,6 +386,7 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
 
         setHoveredNodeId(null)
         setInternalFocusNodeId(null)
+        setTooltip(null)
         onDeselect?.()
       }
 
@@ -359,6 +395,12 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
         window.removeEventListener('keydown', handler)
       }
     }, [onDeselect])
+
+    useEffect(() => {
+      if (!showTooltips) {
+        setTooltip(null)
+      }
+    }, [showTooltips])
 
     useEffect(() => {
       const svgElement = svgRef.current
@@ -488,6 +530,11 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
           preserveAspectRatio="xMidYMid meet"
           role="img"
           aria-label="Interactive knowledge graph"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setTooltip((previous) => (previous?.pinned ? null : previous))
+            }
+          }}
         >
           <defs>
             <marker
@@ -526,7 +573,27 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
                   y2={targetNode.y ?? 0}
                   stroke="transparent"
                   strokeWidth={12}
-                  onClick={() => {
+                  onClick={(event) => {
+                    event.stopPropagation()
+
+                    if (showTooltips) {
+                      const position = getTooltipPosition(
+                        ((sourceNode.x ?? 0) + (targetNode.x ?? 0)) / 2,
+                        ((sourceNode.y ?? 0) + (targetNode.y ?? 0)) / 2,
+                        zoomTransformRef.current,
+                        renderedWidth,
+                        renderedHeight,
+                      )
+
+                      setTooltip({
+                        type: 'edge',
+                        data: edgeData,
+                        x: position.x,
+                        y: position.y,
+                        pinned: true,
+                      })
+                    }
+
                     onEdgeClick?.(edgeData)
                   }}
                   style={{ cursor: 'pointer' }}
@@ -543,10 +610,7 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
                   y2={targetNode.y ?? 0}
                   strokeWidth={edge.weight ? 1.5 + Math.min(edge.weight, 4) * 0.75 : 1.5}
                   markerEnd={edge.directed ? `url(#${ARROWHEAD_ID})` : undefined}
-                  onClick={() => {
-                    onEdgeClick?.(edgeData)
-                  }}
-                  style={{ cursor: 'pointer', pointerEvents: 'stroke' }}
+                  style={{ pointerEvents: 'none' }}
                 />
               </g>
             )
@@ -594,11 +658,79 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
                 transform={`translate(${node.x ?? 0}, ${node.y ?? 0})`}
                 onMouseEnter={() => {
                   setHoveredNodeId(node.id)
+
+                  if (!showTooltips) {
+                    return
+                  }
+
+                  const position = getTooltipPosition(
+                    node.x ?? 0,
+                    node.y ?? 0,
+                    zoomTransformRef.current,
+                    renderedWidth,
+                    renderedHeight,
+                  )
+
+                  setTooltip((previous) => {
+                    if (previous?.pinned) {
+                      return previous
+                    }
+
+                    return {
+                      type: 'node',
+                      data: sourceNode,
+                      x: position.x,
+                      y: position.y,
+                      pinned: false,
+                    }
+                  })
                 }}
                 onMouseLeave={() => {
                   setHoveredNodeId(null)
+
+                  if (!showTooltips) {
+                    return
+                  }
+
+                  setTooltip((previous) => {
+                    if (previous?.pinned) {
+                      return previous
+                    }
+
+                    return null
+                  })
                 }}
-                onClick={() => {
+                onClick={(event) => {
+                  event.stopPropagation()
+
+                  if (showTooltips) {
+                    setTooltip((previous) => {
+                      if (
+                        previous?.pinned &&
+                        previous.type === 'node' &&
+                        (previous.data as GraphNode).id === sourceNode.id
+                      ) {
+                        return null
+                      }
+
+                      const position = getTooltipPosition(
+                        node.x ?? 0,
+                        node.y ?? 0,
+                        zoomTransformRef.current,
+                        renderedWidth,
+                        renderedHeight,
+                      )
+
+                      return {
+                        type: 'node',
+                        data: sourceNode,
+                        x: position.x,
+                        y: position.y,
+                        pinned: true,
+                      }
+                    })
+                  }
+
                   onNodeClick?.(sourceNode)
                 }}
               >
@@ -630,6 +762,19 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
             })}
           </g>
         </svg>
+        {showTooltips && tooltip && (
+          <Tooltip
+            type={tooltip.type}
+            data={tooltip.data}
+            x={tooltip.x}
+            y={tooltip.y}
+            pinned={tooltip.pinned}
+            options={tooltipOptions}
+            onClose={() => {
+              setTooltip(null)
+            }}
+          />
+        )}
       </div>
     )
   },

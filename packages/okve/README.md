@@ -10,6 +10,7 @@ Current features include:
 - Group-based node colors and node sizing
 - Controlled node selection and programmatic focus
 - Optional in-graph search and group filter chips
+- Optional built-in node and edge tooltips
 - Escape-to-deselect callback and stats overlay
 - Imperative PNG export API
 
@@ -51,6 +52,13 @@ export function GraphScreen() {
         showSearch
         showGroupFilter
         showStats
+        showTooltips
+        tooltipOptions={{
+          nodeFields: ['group', 'metadata'],
+          edgeFields: ['label', 'metadata'],
+          metadataKeys: ['description', 'takeaway'],
+          maxRows: 4,
+        }}
         onNodeClick={(node) => {
           setSelectedId(node.id)
           setFocusNodeId(node.id)
@@ -87,6 +95,8 @@ import '@biki-dev/okve/styles.css'
 | `focusNodeId` | `string` | Animates and centers the camera on the provided node id. |
 | `showSearch` | `boolean` | Shows a built-in search input and search results list. Default: `false`. |
 | `showGroupFilter` | `boolean` | Shows toggle chips for node groups. Default: `false`. |
+| `showTooltips` | `boolean` | Enables built-in node/edge tooltips with click-to-pin behavior. Default: `false`. |
+| `tooltipOptions` | `TooltipOptions` | Selects which node/edge fields appear in built-in tooltips. |
 | `onDeselect` | `() => void` | Called when Escape is pressed to clear active selection state. |
 | `showStats` | `boolean` | Shows a subtle overlay with node and edge counts. Default: `false`. |
 

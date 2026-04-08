@@ -9,6 +9,8 @@ const propRows = [
   { name: 'showSearch', type: 'boolean', defaultValue: 'false', description: 'Shows the built-in search input and results.' },
   { name: 'showGroupFilter', type: 'boolean', defaultValue: 'false', description: 'Shows chips for node group filtering.' },
   { name: 'showStats', type: 'boolean', defaultValue: 'false', description: 'Shows a subtle node and edge count overlay.' },
+  { name: 'showTooltips', type: 'boolean', defaultValue: 'false', description: 'Enables built-in node and edge tooltips with click-to-pin behavior.' },
+  { name: 'tooltipOptions', type: 'TooltipOptions', description: 'Lets users choose which tooltip fields to show for nodes and edges.' },
   { name: 'onNodeClick', type: '(node: GraphNode) => void', description: 'Called when a node is clicked.' },
   { name: 'onEdgeClick', type: '(edge: GraphEdge) => void', description: 'Called when an edge is clicked.' },
   { name: 'onDeselect', type: '() => void', description: 'Called when Escape clears the current selection.' },
@@ -40,6 +42,11 @@ export function ApiReference() {
           <code>GraphEdge</code> supports <code>id</code>, <code>source</code>,{' '}
           <code>target</code>, optional <code>directed</code>, optional <code>weight</code>,{' '}
           optional <code>label</code>, and freeform metadata.
+        </p>
+        <p>
+          <code>TooltipOptions</code> supports optional <code>nodeFields</code>,{' '}
+          <code>edgeFields</code>, <code>metadataKeys</code>, and <code>maxRows</code> so you can
+          control exactly what appears in built-in tooltips.
         </p>
         <p>
           <code>KnowledgeGraphHandle</code> exposes <code>exportAsPNG(filename?)</code> so you can
