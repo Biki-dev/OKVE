@@ -10,6 +10,28 @@ export function Changelog() {
       </section>
       <section id="schema" className="timeline">
         <section>
+          <h2>v0.4.0</h2>
+          <ul>
+            <li>Added built-in node tooltips with hover preview and click-to-pin behavior.</li>
+            <li>Added built-in edge tooltips on click with source, target, and edge metadata.</li>
+            <li>
+              Added <code>showTooltips</code> and <code>tooltipOptions</code> for configurable
+              tooltip content.
+            </li>
+            <li>Added tooltip auto-positioning so cards stay within graph bounds.</li>
+            <li>Added demo controls for toggling tooltip fields and metadata keys.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>v0.3.2</h2>
+          <ul>
+            <li>Ensured package styles are injected automatically for consumers.</li>
+            <li>
+              Added optional explicit stylesheet import via <code>@biki-dev/okve/styles.css</code>.
+            </li>
+          </ul>
+        </section>
+        <section>
           <h2>v0.3.0</h2>
           <ul>
             <li>Added controlled node selection and programmatic focus.</li>
