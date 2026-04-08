@@ -66,6 +66,14 @@ export function GraphScreen() {
 }
 ```
 
+Styles are auto-injected when the package is imported.
+
+If you prefer explicit style loading, you can also import:
+
+```ts
+import '@biki-dev/okve/styles.css'
+```
+
 ## Props
 
 | Prop | Type | Description |

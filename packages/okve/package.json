@@ -1,6 +1,6 @@
 {
 	"name": "@biki-dev/okve",
-	"version": "0.3.0",
+	"version": "0.3.2",
 	"private": false,
 	"type": "module",
 	"description": "Open Knowledge Visualization Engine, a reusable React knowledge graph component.",
@@ -29,7 +29,8 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/okve.js",
 			"require": "./dist/okve.cjs"
-		}
+		},
+		"./styles.css": "./dist/okve.css"
 	},
 	"publishConfig": {
 		"access": "public"

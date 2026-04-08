@@ -1,3 +1,12 @@
+## [0.3.2] - 2026-04-08
+
+### Fixed
+- Ensured `KnowledgeGraph` styles are always present for package consumers by injecting core CSS at runtime on first import.
+- Prevented unstyled production/deployment renders where extracted library CSS was not automatically loaded by the host app.
+
+### Added
+- Exported optional stylesheet subpath `@biki-dev/okve/styles.css` for teams that prefer explicit CSS imports.
+
 ## [0.3.0] - 2026-04-07
 
 ### Added

@@ -1,3 +1,7 @@
+import { ensureOkveStyles } from './styles/ensureStyles'
+
+ensureOkveStyles()
+
 export { KnowledgeGraph } from './components/KnowledgeGraph'
 export type {
 	GraphData,
