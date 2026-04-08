@@ -102,7 +102,7 @@ export function DemoPage() {
             showGroupFilter
             showStats
             height={520}
-            onNodeClick={(node) => {
+            onNodeClick={(node: GraphNode) => {
               setSelectedId(node.id)
               setFocusNodeId(node.id)
             }}

@@ -15,10 +15,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
-    "paths": {
-      "@biki-dev/okve": ["../packages/okve/src/index.ts"]
-    },
 
     /* Linting */
     "noUnusedLocals": true,
