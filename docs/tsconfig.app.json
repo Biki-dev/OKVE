@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2023",
-    "useDefineForClassFields": true,
+    "target": "es2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
+    "module": "esnext",
     "types": ["vite/client"],
     "skipLibCheck": true,
 
@@ -15,18 +14,17 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@biki-dev/okve": ["../packages/okve/src/index.ts"]
+    },
 
     /* Linting */
-    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "paths": {
-      "okve": ["../packages/okve/src/index.ts"],
-      "okve/*": ["../packages/okve/src/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
 }

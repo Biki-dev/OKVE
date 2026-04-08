@@ -13,6 +13,7 @@ export interface GraphEdge {
   directed?: boolean
   weight?: number
   label?: string
+  metadata?: Record<string, unknown>
 }
 
 export interface GraphData {
