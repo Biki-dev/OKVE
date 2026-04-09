@@ -1,3 +1,14 @@
+## [0.5.0] - 2026-04-09
+
+### Added
+- Multi-layout architecture with strategy components under `packages/okve/src/layouts`.
+- New `layout` prop on `KnowledgeGraph` with `force` (default) and `radial` modes.
+- New exported `GraphLayout` type for TypeScript users.
+- Full radial tree layout mode with automatic root selection from graph degree.
+- BFS-based spanning tree conversion from `GraphData` for radial rendering.
+- Curved radial links, concentric depth rings, and arc-aware label rotation.
+- Radial mode parity for hover highlight, selection, callbacks, search/focus integration, and tooltips.
+
 ## [0.4.0] - 2026-04-08
 
 ### Added

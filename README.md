@@ -5,6 +5,7 @@ OKVE is a React component library for rendering interactive knowledge graphs fro
 
 Current features include:
 - Force-directed layout powered by D3
+- Radial tree layout for hierarchical views
 - Zoom and pan interactions
 - Clickable nodes and edges
 - Edge labels and directed arrows
@@ -48,6 +49,7 @@ export function GraphScreen() {
         data={graphData}
         width="100%"
         height={640}
+        layout="radial"
         selectedNodeId={selectedId}
         focusNodeId={focusNodeId}
         showSearch
@@ -82,6 +84,7 @@ export function GraphScreen() {
 | `data` | `GraphData` | Graph nodes and edges to render. |
 | `width` | `number | string` | Graph width, defaults to `100%`. |
 | `height` | `number | string` | Graph height, defaults to `640`. |
+| `layout` | `'force' | 'radial'` | Selects the visualization mode. Default: `force`. |
 | `onNodeClick` | `(node: GraphNode) => void` | Called when a node is clicked. |
 | `onEdgeClick` | `(edge: GraphEdge) => void` | Called when an edge is clicked. |
 | `selectedNodeId` | `string` | Highlights the selected node when provided. |
@@ -131,7 +134,7 @@ type GraphData = {
 
 ## Demo
 
-See the demo in [DEMO](https://okve.vercel.app/demo) for a complete example with click details, selected state, and labeled edges.
+See the demo in [DEMO](https://okve.vercel.app/demo) for a complete example with click details, selected state, labeled edges, and a force/radial layout toggle.
 
 ## Known Notes
 

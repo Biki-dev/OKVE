@@ -4,6 +4,7 @@ const propRows = [
   { name: 'data', type: 'GraphData', description: 'Nodes and edges to render in the graph.' },
   { name: 'width', type: 'number | string', defaultValue: '100%', description: 'Width of the graph viewport.' },
   { name: 'height', type: 'number | string', defaultValue: '640', description: 'Height of the graph viewport.' },
+  { name: 'layout', type: "'force' | 'radial'", defaultValue: 'force', description: 'Selects the graph layout strategy used for rendering.' },
   { name: 'selectedNodeId', type: 'string', description: 'Keeps a node selected from outside the graph.' },
   { name: 'focusNodeId', type: 'string', description: 'Programmatically centers the camera on a node id.' },
   { name: 'showSearch', type: 'boolean', defaultValue: 'false', description: 'Shows the built-in search input and results.' },
@@ -47,6 +48,10 @@ export function ApiReference() {
           <code>TooltipOptions</code> supports optional <code>nodeFields</code>,{' '}
           <code>edgeFields</code>, <code>metadataKeys</code>, and <code>maxRows</code> so you can
           control exactly what appears in built-in tooltips.
+        </p>
+        <p>
+          <code>GraphLayout</code> is exported as <code>'force' | 'radial'</code> and is accepted
+          by the <code>layout</code> prop.
         </p>
         <p>
           <code>KnowledgeGraphHandle</code> exposes <code>exportAsPNG(filename?)</code> so you can

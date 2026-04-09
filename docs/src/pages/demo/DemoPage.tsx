@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import {
   KnowledgeGraph,
   type EdgeTooltipField,
+  type GraphLayout,
   type GraphNode,
   type KnowledgeGraphHandle,
   type NodeTooltipField,
@@ -29,6 +30,7 @@ export function DemoPage() {
   const graphRef = useRef<KnowledgeGraphHandle | null>(null)
   const [selectedId, setSelectedId] = useState<string | undefined>(sampleData.nodes[0]?.id)
   const [focusNodeId, setFocusNodeId] = useState<string | undefined>(sampleData.nodes[0]?.id)
+  const [layout, setLayout] = useState<GraphLayout>('force')
   const [nodeTooltipFields, setNodeTooltipFields] = useState<NodeTooltipField[]>(NODE_FIELDS)
   const [edgeTooltipFields, setEdgeTooltipFields] = useState<EdgeTooltipField[]>(EDGE_FIELDS)
   const [metadataKeys, setMetadataKeys] = useState<string[]>(METADATA_KEYS)
@@ -107,6 +109,23 @@ export function DemoPage() {
       <section className="panel demo-controls">
         <div className="panel-title">Focus and Tooltip Controls</div>
         <div className="demo-controls-body">
+          <div className="control-group">
+            <p className="control-group-title">Layout</p>
+            <div className="chip-row">
+              {(['force', 'radial'] as const).map((layoutOption) => (
+                <button
+                  key={layoutOption}
+                  type="button"
+                  className={`chip ${layout === layoutOption ? 'chip--active' : ''}`}
+                  onClick={() => {
+                    setLayout(layoutOption)
+                  }}
+                >
+                  {layoutOption}
+                </button>
+              ))}
+            </div>
+          </div>
         {groupedNodes.map(([group, nodes]) => (
           <div key={group} className="control-group">
             <p className="control-group-title">{group}</p>
@@ -193,6 +212,7 @@ export function DemoPage() {
           <KnowledgeGraph
             ref={graphRef}
             data={sampleData}
+            layout={layout}
             selectedNodeId={selectedId}
             focusNodeId={focusNodeId}
             showSearch

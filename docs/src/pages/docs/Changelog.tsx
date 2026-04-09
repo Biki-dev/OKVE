@@ -10,6 +10,15 @@ export function Changelog() {
       </section>
       <section id="schema" className="timeline">
         <section>
+          <h2>v0.5.0</h2>
+          <ul>
+            <li>Added multi-layout support with <code>layout=&quot;force&quot;</code> and <code>layout=&quot;radial&quot;</code>.</li>
+            <li>Added a radial tree renderer with automatic root selection and concentric depth rings.</li>
+            <li>Added curved radial links, rotated labels, and full interaction parity with the force layout.</li>
+            <li>Introduced the exported <code>GraphLayout</code> type for layout-safe TypeScript usage.</li>
+          </ul>
+        </section>
+        <section>
           <h2>v0.4.0</h2>
           <ul>
             <li>Added built-in node tooltips with hover preview and click-to-pin behavior.</li>

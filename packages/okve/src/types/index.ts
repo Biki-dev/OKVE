@@ -21,6 +21,8 @@ export interface GraphData {
   edges: GraphEdge[]
 }
 
+export type GraphLayout = 'force' | 'radial'
+
 export type NodeTooltipField = 'id' | 'group' | 'size' | 'metadata'
 export type EdgeTooltipField = 'id' | 'label' | 'weight' | 'directed' | 'metadata'
 
@@ -35,6 +37,7 @@ export interface KnowledgeGraphProps {
   data: GraphData
   width?: number | string
   height?: number | string
+  layout?: GraphLayout
   onNodeClick?: (node: GraphNode) => void
   onEdgeClick?: (edge: GraphEdge) => void
   selectedNodeId?: string

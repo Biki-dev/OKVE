@@ -31,6 +31,27 @@ const tooltipFieldsExample = `<KnowledgeGraph
   }}
 />`
 
+const radialLayoutExample = `<KnowledgeGraph
+  data={data}
+  layout="radial"
+  showTooltips
+  showSearch
+  showGroupFilter
+/>`
+
+const layoutSwitchExample = `const [layout, setLayout] = useState<'force' | 'radial'>('force')
+
+<button onClick={() => setLayout((prev) => (prev === 'force' ? 'radial' : 'force'))}>
+  Switch layout
+</button>
+
+<KnowledgeGraph
+  data={data}
+  layout={layout}
+  selectedNodeId={selectedId}
+  onNodeClick={(node) => setSelectedId(node.id)}
+/>`
+
 export function Examples() {
   return (
     <article className="doc-article">
@@ -66,6 +87,26 @@ export function Examples() {
         <p>
           Use <code>tooltipOptions</code> when you want users to see only selected fields such as
           group, label, or a subset of metadata keys.
+        </p>
+      </section>
+      <section id="radial-layout">
+        <h2>Radial layout</h2>
+        <p>
+          Use radial mode when you want to present hierarchical or clustered relationships from
+          the same graph data model.
+        </p>
+        <CodeBlock code={radialLayoutExample} lang="tsx" />
+        <p>
+          The radial renderer picks the most connected node as the root and places neighbors in
+          concentric rings.
+        </p>
+      </section>
+      <section id="layout-switching">
+        <h2>Switch layouts at runtime</h2>
+        <CodeBlock code={layoutSwitchExample} lang="tsx" />
+        <p>
+          Keep selection and surrounding UI controlled in React state, then swap between{' '}
+          <code>force</code> and <code>radial</code> depending on the story you want to tell.
         </p>
       </section>
       <section id="workflow">

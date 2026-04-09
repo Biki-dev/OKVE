@@ -7,6 +7,7 @@ export type {
 	EdgeTooltipField,
 	GraphData,
 	GraphEdge,
+	GraphLayout,
 	GraphNode,
 	KnowledgeGraphHandle,
 	KnowledgeGraphProps,
