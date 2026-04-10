@@ -39,9 +39,27 @@ const radialLayoutExample = `<KnowledgeGraph
   showGroupFilter
 />`
 
-const layoutSwitchExample = `const [layout, setLayout] = useState<'force' | 'radial'>('force')
+const arcLayoutExample = `<KnowledgeGraph
+  data={data}
+  layout="arc"
+  showTooltips
+  showSearch
+  showStats
+/>`
 
-<button onClick={() => setLayout((prev) => (prev === 'force' ? 'radial' : 'force'))}>
+const chordLayoutExample = `<KnowledgeGraph
+  data={gradesWithGroups}
+  layout="chord"
+  showTooltips
+  showGroupFilter
+/>`
+
+const layoutSwitchExample = `const [layout, setLayout] = useState<'force' | 'radial' | 'arc' | 'chord'>('force')
+
+<button onClick={() => setLayout((prev) => {
+  const layouts = ['force', 'radial', 'arc', 'chord'] as const
+  return layouts[(layouts.indexOf(prev) + 1) % layouts.length]
+})}>
   Switch layout
 </button>
 
@@ -101,12 +119,36 @@ export function Examples() {
           concentric rings.
         </p>
       </section>
+      <section id="arc-layout">
+        <h2>Arc layout</h2>
+        <p>
+          Use arc mode to show connection density across a linear sequence or timeline. Highly
+          connected nodes automatically move toward the center, making it easy to spot hubs.
+        </p>
+        <CodeBlock code={arcLayoutExample} lang="tsx" />
+        <p>
+          Nodes sit on a horizontal baseline with arcs showing edge connections. Edge weight
+          affects arc thickness. This layout works well with search and stats overlay.
+        </p>
+      </section>
+      <section id="chord-layout">
+        <h2>Chord layout</h2>
+        <p>
+          Use chord mode to visualize flow and volume between group segments. Each group becomes
+          a segment on a circle, and ribbon thickness represents edge weight aggregated by group.
+        </p>
+        <CodeBlock code={chordLayoutExample} lang="tsx" />
+        <p>
+          The chord layout requires nodes to have a <code>group</code> field for meaningful
+          visualization. Hover a group segment to highlight connected ribbons.
+        </p>
+      </section>
       <section id="layout-switching">
         <h2>Switch layouts at runtime</h2>
         <CodeBlock code={layoutSwitchExample} lang="tsx" />
         <p>
           Keep selection and surrounding UI controlled in React state, then swap between{' '}
-          <code>force</code> and <code>radial</code> depending on the story you want to tell.
+          <code>force</code>, <code>radial</code>, <code>arc</code>, and <code>chord</code> depending on the story you want to tell.
         </p>
       </section>
       <section id="workflow">

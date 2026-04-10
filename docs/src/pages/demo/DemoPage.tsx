@@ -112,13 +112,13 @@ export function DemoPage() {
           <div className="control-group">
             <p className="control-group-title">Layout</p>
             <div className="chip-row">
-              {(['force', 'radial'] as const).map((layoutOption) => (
+              {(['force', 'radial', 'arc', 'chord'] as const).map((layoutOption) => (
                 <button
                   key={layoutOption}
                   type="button"
                   className={`chip ${layout === layoutOption ? 'chip--active' : ''}`}
                   onClick={() => {
-                    setLayout(layoutOption)
+                    setLayout(layoutOption as GraphLayout)
                   }}
                 >
                   {layoutOption}

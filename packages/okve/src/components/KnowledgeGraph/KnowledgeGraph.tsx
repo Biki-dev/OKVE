@@ -5,6 +5,8 @@ import type { GraphData, KnowledgeGraphHandle, KnowledgeGraphProps } from '../..
 import { getGroupColor } from '../../utils/colorPalette'
 import { ForceLayout } from '../../layouts/ForceLayout'
 import { RadialLayout } from '../../layouts/RadialLayout'
+import { ArcLayout } from '../../layouts/ArcLayout'
+import { ChordLayout } from '../../layouts/ChordLayout'
 import './KnowledgeGraph.css'
 
 const DEFAULT_WIDTH = 960
@@ -208,7 +210,11 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
       })
     }
 
-    const LayoutComponent = layout === 'radial' ? RadialLayout : ForceLayout
+    const LayoutComponent = 
+      layout === 'radial' ? RadialLayout :
+      layout === 'arc' ? ArcLayout :
+      layout === 'chord' ? ChordLayout :
+      ForceLayout
 
     return (
       <div

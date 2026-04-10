@@ -1,3 +1,19 @@
+## [0.6.0] - 2026-04-09
+
+### Added
+- `layout="arc"` — Arc diagram with nodes on a baseline and curved edge arcs
+- `layout="chord"` — Chord diagram showing flow between node groups
+- `GraphLayout` type updated to include `'arc'` and `'chord'`
+- Arc layout auto-sorts nodes by degree for optimal arc readability
+- Chord layout aggregates edge weights by group into a flow matrix
+- Hover highlight on chord arcs dims unrelated ribbons
+- Layout switcher in demo with all four modes
+- Arc and chord sections added to API Reference and Examples docs
+
+### Notes
+- Chord layout requires nodes to have a `group` field to be meaningful
+- Arc layout works with any `GraphData` — group field is optional
+
 ## [0.5.0] - 2026-04-09
 
 ### Added

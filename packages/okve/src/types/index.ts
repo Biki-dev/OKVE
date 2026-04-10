@@ -21,7 +21,7 @@ export interface GraphData {
   edges: GraphEdge[]
 }
 
-export type GraphLayout = 'force' | 'radial'
+export type GraphLayout = 'force' | 'radial' | 'arc' | 'chord'
 
 export type NodeTooltipField = 'id' | 'group' | 'size' | 'metadata'
 export type EdgeTooltipField = 'id' | 'label' | 'weight' | 'directed' | 'metadata'

@@ -4,7 +4,7 @@ const propRows = [
   { name: 'data', type: 'GraphData', description: 'Nodes and edges to render in the graph.' },
   { name: 'width', type: 'number | string', defaultValue: '100%', description: 'Width of the graph viewport.' },
   { name: 'height', type: 'number | string', defaultValue: '640', description: 'Height of the graph viewport.' },
-  { name: 'layout', type: "'force' | 'radial'", defaultValue: 'force', description: 'Selects the graph layout strategy used for rendering.' },
+  { name: 'layout', type: "'force' | 'radial' | 'arc' | 'chord'", defaultValue: 'force', description: 'Selects the graph layout strategy used for rendering.' },
   { name: 'selectedNodeId', type: 'string', description: 'Keeps a node selected from outside the graph.' },
   { name: 'focusNodeId', type: 'string', description: 'Programmatically centers the camera on a node id.' },
   { name: 'showSearch', type: 'boolean', defaultValue: 'false', description: 'Shows the built-in search input and results.' },
@@ -50,12 +50,33 @@ export function ApiReference() {
           control exactly what appears in built-in tooltips.
         </p>
         <p>
-          <code>GraphLayout</code> is exported as <code>'force' | 'radial'</code> and is accepted
+          <code>GraphLayout</code> is exported as <code>'force' | 'radial' | 'arc' | 'chord'</code> and is accepted
           by the <code>layout</code> prop.
         </p>
         <p>
           <code>KnowledgeGraphHandle</code> exposes <code>exportAsPNG(filename?)</code> so you can
           generate image snapshots from a ref.
+        </p>
+      </section>
+      <section id="layouts">
+        <h2>Layout Types</h2>
+        <p>
+          <code>force</code> — Default. Force-directed simulation. Best for
+          exploring connections between nodes of similar importance.
+        </p>
+        <p>
+          <code>radial</code> — Tree layout arranged in concentric rings.
+          Best for hierarchical data with a clear root node.
+        </p>
+        <p>
+          <code>arc</code> — Nodes on a horizontal baseline, edges as arcs.
+          Best for showing connection density across a linear sequence. Highly connected nodes
+          are positioned toward the center automatically.
+        </p>
+        <p>
+          <code>chord</code> — Group segments on a circle, ribbons between
+          groups. Best for showing flow and relationship volume between groups.
+          Requires nodes to have a <code>group</code> field to be effective.
         </p>
       </section>
       <section id="faq">

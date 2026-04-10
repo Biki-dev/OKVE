@@ -284,3 +284,28 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Arc diagram */
+.okve-arc-baseline {
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1px;
+}
+
+/* Chord diagram */
+.okve-chord-arc {
+  cursor: pointer;
+  transition: opacity 160ms ease, filter 160ms ease;
+}
+
+.okve-chord-arc--hovered {
+  filter: brightness(1.15);
+}
+
+.okve-chord-arc--dimmed {
+  opacity: 0.25;
+}
+
+.okve-chord-ribbon {
+  transition: fill-opacity 160ms ease, stroke-opacity 160ms ease;
+  cursor: default;
+}
