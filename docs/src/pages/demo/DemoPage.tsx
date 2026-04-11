@@ -90,38 +90,6 @@ export function DemoPage() {
     return 'No metadata matches the selected metadata keys.'
   }, [metadataKeys, nodeTooltipFields, selectedNode])
 
-  const tooltipPreviewRows = useMemo(() => {
-    if (!selectedNode) {
-      return [] as Array<{ key: string; value: string }>
-    }
-
-    const rows: Array<{ key: string; value: string }> = []
-
-    if (nodeTooltipFields.includes('id')) {
-      rows.push({ key: 'id', value: selectedNode.id })
-    }
-
-    if (nodeTooltipFields.includes('group') && selectedNode.group) {
-      rows.push({ key: 'group', value: selectedNode.group })
-    }
-
-    if (nodeTooltipFields.includes('size') && typeof selectedNode.size === 'number') {
-      rows.push({ key: 'size', value: String(selectedNode.size) })
-    }
-
-    if (nodeTooltipFields.includes('metadata') && selectedNode.metadata) {
-      for (const [key, value] of Object.entries(selectedNode.metadata)) {
-        if (metadataKeys.length > 0 && !metadataKeys.includes(key)) {
-          continue
-        }
-
-        rows.push({ key, value: formatMetadataValue(value) })
-      }
-    }
-
-    return rows.slice(0, 6)
-  }, [metadataKeys, nodeTooltipFields, selectedNode])
-
   const showExportStatus = (tone: 'success' | 'error', message: string) => {
     setExportStatus({ tone, message })
   }
@@ -313,39 +281,6 @@ export function DemoPage() {
               setFocusNodeId(undefined)
             }}
           />
-        </div>
-      </section>
-
-      <section className="panel demo-selected-panel">
-        <div className="panel-title">Node Tooltip Preview</div>
-        <div className="selected-node">
-          {selectedNode ? (
-            <div className="okve-tooltip okve-tooltip--pinned okve-tooltip--preview" data-testid="node-tooltip-preview">
-              <div className="okve-tooltip__header">
-                <strong className="okve-tooltip__title">{selectedNode.label}</strong>
-              </div>
-              {nodeTooltipFields.includes('group') && selectedNode.group ? (
-                <span className="okve-tooltip__badge">{selectedNode.group}</span>
-              ) : null}
-              <dl className="okve-tooltip__meta">
-                {tooltipPreviewRows.length > 0 ? (
-                  tooltipPreviewRows.map((row) => (
-                    <div key={`${row.key}-${row.value}`} className="okve-tooltip__meta-row">
-                      <dt>{row.key}</dt>
-                      <dd>{row.value}</dd>
-                    </div>
-                  ))
-                ) : (
-                  <div className="okve-tooltip__meta-row">
-                    <dt>state</dt>
-                    <dd>No tooltip fields selected</dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-          ) : (
-            <p>No node selected.</p>
-          )}
         </div>
       </section>
 
