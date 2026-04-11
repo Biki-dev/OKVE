@@ -1,0 +1,109 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - React 19
+  - React Router
+  - Vite
+  - D3.js
+  - Shiki
+  - custom CSS
+routes:
+  - path: /
+    file: docs/src/pages/Home.tsx
+    auth_required: false
+    description: Marketing homepage with live graph preview and quick-start actions
+  - path: /demo
+    file: docs/src/pages/demo/DemoPage.tsx
+    auth_required: false
+    description: Interactive playground for layouts, tooltips, selection, and export
+  - path: /docs
+    file: docs/src/App.tsx
+    auth_required: false
+    description: Docs section index that redirects to getting started
+  - path: /docs/getting-started
+    file: docs/src/pages/docs/GettingStarted.tsx
+    auth_required: false
+    description: Installation and usage guide
+  - path: /docs/api-reference
+    file: docs/src/pages/docs/ApiReference.tsx
+    auth_required: false
+    description: Component prop and type reference
+  - path: /docs/examples
+    file: docs/src/pages/docs/Examples.tsx
+    auth_required: false
+    description: Usage examples for layouts, selection, and tooltips
+  - path: /docs/changelog
+    file: docs/src/pages/docs/Changelog.tsx
+    auth_required: false
+    description: Release notes and version history
+features:
+  - name: Homepage overview and quick start
+    description: Presents the product pitch, a live KnowledgeGraph preview, install guidance, and copy-to-clipboard setup instructions.
+    files:
+      - docs/src/pages/Home.tsx
+      - docs/src/components/ui/CodeBlock.tsx
+      - docs/src/data/sampleData.ts
+    entry_route: /
+    user_interactions:
+      - Open the homepage
+      - Click Get Started to enter the docs
+      - Click View on GitHub to open the repository
+      - Click the terminal copy button to copy the install command
+      - Move the pointer across the hero visual to see parallax motion
+    api_calls: []
+    auth_required: false
+  - name: Interactive demo playground
+    description: Lets users switch graph layouts, pick nodes by group, tune tooltip fields, inspect the selected node, and export the graph as PNG.
+    files:
+      - docs/src/pages/demo/DemoPage.tsx
+      - docs/src/data/sampleData.ts
+      - packages/okve/src/components/KnowledgeGraph/KnowledgeGraph.tsx
+      - packages/okve/src/components/KnowledgeGraph/Tooltip.tsx
+    entry_route: /demo
+    user_interactions:
+      - Open the demo page
+      - Switch between force, radial, arc, and chord layouts
+      - Select a node from the grouped node chips
+      - Toggle node tooltip fields, edge tooltip fields, and metadata keys
+      - Click Export PNG to download a graph snapshot
+      - Click a node in the graph to update the selected node panel
+    api_calls: []
+    auth_required: false
+  - name: Documentation browser
+    description: Provides nested docs pages with a sidebar, in-page section navigation, code samples, and prop tables.
+    files:
+      - docs/src/App.tsx
+      - docs/src/components/layout/Sidebar.tsx
+      - docs/src/pages/docs/GettingStarted.tsx
+      - docs/src/pages/docs/ApiReference.tsx
+      - docs/src/pages/docs/Examples.tsx
+      - docs/src/pages/docs/Changelog.tsx
+      - docs/src/components/ui/PropsTable.tsx
+      - docs/src/components/ui/CodeBlock.tsx
+    entry_route: /docs/getting-started
+    user_interactions:
+      - Navigate between docs pages using the sidebar
+      - Follow the on-page table of contents links
+      - Read installation, schema, examples, and changelog content
+      - Copy and inspect embedded code snippets
+    api_calls: []
+    auth_required: false
+  - name: Dark theme initialization
+    description: Forces the site into a dark theme on load and persists the selection in localStorage.
+    files:
+      - docs/src/hooks/useTheme.ts
+      - docs/src/App.tsx
+    entry_route: /
+    user_interactions:
+      - Load any page in the site
+      - Observe that the document theme is set automatically
+    api_calls: []
+    auth_required: false
+known_limitations:
+  - issue: The docs site uses static sample data for the preview and demo instead of a live backend.
+    location: docs/src/data/sampleData.ts
+    impact: Test coverage should focus on UI behavior and local state transitions, not network flows.
+  - issue: The current theme hook forces dark mode on every load instead of letting users switch themes.
+    location: docs/src/hooks/useTheme.ts
+    impact: Theme behavior is deterministic, but there is no user-facing toggle to test.

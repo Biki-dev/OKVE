@@ -1,0 +1,18 @@
+{
+  "status": "init",
+  "scope": "codebase",
+  "type": "frontend",
+  "localEndpoint": "http://localhost:5173/",
+  "serverPort": 35843,
+  "executionArgs": {
+    "projectName": "OKVE",
+    "projectPath": "/workspaces/OKVE",
+    "testIds": [],
+    "additionalInstruction": "",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-LiOIl6ApFFRXbuUvk51cCTRA0R8zjFXEw7RFIqtP42_a_o6FQT0mrAWT8OldgBJPa0I8oPwk2h_9HxbWVV4AFNs_qrLMmQphU4aKfK2lPfHwU-mJiHvVBtmevIFppWSimX4"
+    }
+  },
+  "proxy": "http://c7ce7266-8590-4b8b-9f40-04bfa8acffae:nZ9TsYkikNGdaBWghllAwatCTK5o0Yg1@tun.testsprite.com:8080"
+}
