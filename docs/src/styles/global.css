@@ -1156,9 +1156,39 @@ code {
   box-shadow: 0 8px 20px rgba(111, 66, 255, 0.24);
 }
 
+.demo-export-status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.demo-export-status--success {
+  color: #9fd3a7;
+}
+
+.demo-export-status--error {
+  color: #f3a3a3;
+}
+
 .selected-node {
   padding: 20px;
   color: var(--text-secondary);
+}
+
+.okve-tooltip--preview {
+  position: static;
+  width: 100%;
+  max-width: 100%;
+  pointer-events: auto;
+}
+
+.okve-tooltip--preview .okve-tooltip__meta-row {
+  grid-template-columns: 96px 1fr;
+}
+
+.okve-tooltip--preview .okve-tooltip__meta-row dd {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .selected-node-head {

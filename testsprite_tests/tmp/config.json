@@ -3,7 +3,7 @@
   "scope": "codebase",
   "type": "frontend",
   "localEndpoint": "http://localhost:5173/",
-  "serverPort": 35843,
+  "serverPort": 35945,
   "executionArgs": {
     "projectName": "OKVE",
     "projectPath": "/workspaces/OKVE",
@@ -14,5 +14,5 @@
       "API_KEY": "sk-user-LiOIl6ApFFRXbuUvk51cCTRA0R8zjFXEw7RFIqtP42_a_o6FQT0mrAWT8OldgBJPa0I8oPwk2h_9HxbWVV4AFNs_qrLMmQphU4aKfK2lPfHwU-mJiHvVBtmevIFppWSimX4"
     }
   },
-  "proxy": "http://c7ce7266-8590-4b8b-9f40-04bfa8acffae:nZ9TsYkikNGdaBWghllAwatCTK5o0Yg1@tun.testsprite.com:8080"
+  "proxy": "http://9503a6b5-bba7-481c-a8c4-6bd75b5bd2b0:i6qddGu6kbuVGEc71A9Tpxft88yPakPr@tun.testsprite.com:8080"
 }

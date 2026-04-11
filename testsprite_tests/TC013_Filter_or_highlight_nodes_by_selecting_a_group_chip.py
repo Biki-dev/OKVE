@@ -33,16 +33,22 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Demo' link to open the demo page and locate the group chips (click element index 10).
+        # -> Click the 'Demo' link to open the demo page where group chips and the interactive graph are shown.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'React' node group chip to trigger filtering/highlighting of nodes, then observe the graph canvas for visual changes.
+        # -> Click the 'frontend' group chip to filter or highlight nodes belonging to that group, then observe the graph for visible changes.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div[2]/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'frontend' group chip (current index 815) to filter or highlight nodes belonging to that group, then observe the page for changes to the graph display (node counts, highlights, or active chip state).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

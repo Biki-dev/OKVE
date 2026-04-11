@@ -10,6 +10,8 @@ export const sampleData: GraphData = {
       metadata: {
         description: 'Component-driven UI library used to build the docs experience.',
         takeaway: 'The docs app should feel native to React developers.',
+        reason: 'Provides the component model used throughout the docs and demo UI.',
+        strength: 'high',
       },
     },
     {
@@ -20,6 +22,8 @@ export const sampleData: GraphData = {
       metadata: {
         description: 'Keeps the docs data model and navigation contracts type-safe.',
         takeaway: 'Strong types make the docs easier to maintain.',
+        reason: 'Enforces reliable contracts for graph data and page state.',
+        strength: 'high',
       },
     },
     {
@@ -30,6 +34,8 @@ export const sampleData: GraphData = {
       metadata: {
         description: 'Drives the interactive graph rendering and motion in the demo.',
         takeaway: 'Force layouts are a better fit than hard-coded coordinates.',
+        reason: 'Supplies simulation and layout primitives for interactive graphs.',
+        strength: 'high',
       },
     },
     {
@@ -40,6 +46,8 @@ export const sampleData: GraphData = {
       metadata: {
         description: 'Keeps the docs site fast to iterate on during development.',
         takeaway: 'A clean dev server helps the experience stay polished.',
+        reason: 'Handles bundling and HMR for the documentation app.',
+        strength: 'medium',
       },
     },
     {
@@ -50,6 +58,8 @@ export const sampleData: GraphData = {
       metadata: {
         description: 'Provides the runtime that builds and serves the docs site.',
         takeaway: 'Build output and package metadata should stay in sync.',
+        reason: 'Executes build tooling and local development scripts.',
+        strength: 'medium',
       },
     },
   ],

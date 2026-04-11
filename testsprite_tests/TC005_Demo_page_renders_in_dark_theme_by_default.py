@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Demo' link (element index 10) to open the demo playground and then verify the demo page renders with the dark theme applied automatically.
+        # -> Click the 'Demo' link (index 12) to load the demo playground, then verify the page renders in dark theme automatically.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)

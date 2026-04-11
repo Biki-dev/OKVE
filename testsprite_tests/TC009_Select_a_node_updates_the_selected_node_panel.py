@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Demo' link to open the demo page and then, after the page updates, click a node in the graph to verify the selected-node panel updates.
+        # -> Click the 'Demo' link in the top navigation to open the demo page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the graph canvas to select a node so the Selected Node inspection panel updates with that node's details.
+        # -> Click a node in the graph canvas to select it, then verify the selected-node inspection panel updates with that node's details.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div').nth(0)

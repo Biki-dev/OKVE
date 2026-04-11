@@ -34,6 +34,10 @@ export function DemoPage() {
   const [nodeTooltipFields, setNodeTooltipFields] = useState<NodeTooltipField[]>(NODE_FIELDS)
   const [edgeTooltipFields, setEdgeTooltipFields] = useState<EdgeTooltipField[]>(EDGE_FIELDS)
   const [metadataKeys, setMetadataKeys] = useState<string[]>(METADATA_KEYS)
+  const [exportStatus, setExportStatus] = useState<{ tone: 'success' | 'error'; message: string }>({
+    tone: 'success',
+    message: 'No export attempted yet.',
+  })
 
   const selectedNode = useMemo(
     () => sampleData.nodes.find((node) => node.id === selectedId) ?? null,
@@ -60,6 +64,77 @@ export function DemoPage() {
     }),
     [edgeTooltipFields, metadataKeys, nodeTooltipFields],
   )
+
+  const selectedNodeDetails = useMemo(() => {
+    if (!selectedNode) {
+      return 'No node selected.'
+    }
+
+    if (!nodeTooltipFields.includes('metadata')) {
+      return 'Metadata is hidden by the current tooltip field settings.'
+    }
+
+    const metadata = selectedNode.metadata ?? {}
+    const filteredMetadata = Object.fromEntries(
+      Object.entries(metadata).filter(([key]) => metadataKeys.length === 0 || metadataKeys.includes(key)),
+    )
+
+    if (Object.keys(filteredMetadata).length > 0) {
+      return formatMetadataValue(filteredMetadata)
+    }
+
+    if (Object.keys(metadata).length === 0) {
+      return 'No metadata for this node.'
+    }
+
+    return 'No metadata matches the selected metadata keys.'
+  }, [metadataKeys, nodeTooltipFields, selectedNode])
+
+  const tooltipPreviewRows = useMemo(() => {
+    if (!selectedNode) {
+      return [] as Array<{ key: string; value: string }>
+    }
+
+    const rows: Array<{ key: string; value: string }> = []
+
+    if (nodeTooltipFields.includes('id')) {
+      rows.push({ key: 'id', value: selectedNode.id })
+    }
+
+    if (nodeTooltipFields.includes('group') && selectedNode.group) {
+      rows.push({ key: 'group', value: selectedNode.group })
+    }
+
+    if (nodeTooltipFields.includes('size') && typeof selectedNode.size === 'number') {
+      rows.push({ key: 'size', value: String(selectedNode.size) })
+    }
+
+    if (nodeTooltipFields.includes('metadata') && selectedNode.metadata) {
+      for (const [key, value] of Object.entries(selectedNode.metadata)) {
+        if (metadataKeys.length > 0 && !metadataKeys.includes(key)) {
+          continue
+        }
+
+        rows.push({ key, value: formatMetadataValue(value) })
+      }
+    }
+
+    return rows.slice(0, 6)
+  }, [metadataKeys, nodeTooltipFields, selectedNode])
+
+  const showExportStatus = (tone: 'success' | 'error', message: string) => {
+    setExportStatus({ tone, message })
+  }
+
+  const handleExportPng = () => {
+    if (!graphRef.current) {
+      showExportStatus('error', 'Export failed. Graph is not ready yet.')
+      return
+    }
+
+    graphRef.current.exportAsPNG('okve-demo-graph.png')
+    showExportStatus('success', 'PNG export started. Check your downloads.')
+  }
 
   const toggleNodeField = (field: NodeTooltipField) => {
     setNodeTooltipFields((previous) =>
@@ -149,10 +224,18 @@ export function DemoPage() {
           <button
             type="button"
             className="demo-export"
-            onClick={() => graphRef.current?.exportAsPNG('okve-demo-graph.png')}
+            onClick={handleExportPng}
           >
             Export PNG
           </button>
+          <p
+            className={`demo-export-status demo-export-status--${exportStatus.tone}`}
+            role="status"
+            aria-live="polite"
+            data-testid="export-status"
+          >
+            {exportStatus.message}
+          </p>
 
           <div className="tooltip-controls">
             <p className="tooltip-controls-title">Node tooltip fields</p>
@@ -234,6 +317,39 @@ export function DemoPage() {
       </section>
 
       <section className="panel demo-selected-panel">
+        <div className="panel-title">Node Tooltip Preview</div>
+        <div className="selected-node">
+          {selectedNode ? (
+            <div className="okve-tooltip okve-tooltip--pinned okve-tooltip--preview" data-testid="node-tooltip-preview">
+              <div className="okve-tooltip__header">
+                <strong className="okve-tooltip__title">{selectedNode.label}</strong>
+              </div>
+              {nodeTooltipFields.includes('group') && selectedNode.group ? (
+                <span className="okve-tooltip__badge">{selectedNode.group}</span>
+              ) : null}
+              <dl className="okve-tooltip__meta">
+                {tooltipPreviewRows.length > 0 ? (
+                  tooltipPreviewRows.map((row) => (
+                    <div key={`${row.key}-${row.value}`} className="okve-tooltip__meta-row">
+                      <dt>{row.key}</dt>
+                      <dd>{row.value}</dd>
+                    </div>
+                  ))
+                ) : (
+                  <div className="okve-tooltip__meta-row">
+                    <dt>state</dt>
+                    <dd>No tooltip fields selected</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+          ) : (
+            <p>No node selected.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="panel demo-selected-panel">
         <div className="panel-title">Selected Node</div>
         <div className="selected-node">
         {selectedNode ? (
@@ -242,7 +358,7 @@ export function DemoPage() {
               <strong>{selectedNode.label}</strong>
               <span>{selectedNode.group ?? 'none'}</span>
             </p>
-            <pre>{formatMetadataValue(selectedNode.metadata ?? 'No metadata')}</pre>
+            <pre>{selectedNodeDetails}</pre>
           </>
         ) : (
           <p>No node selected.</p>

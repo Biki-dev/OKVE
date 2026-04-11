@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Navigate to http://localhost:5173/docs and verify the page redirects to the Getting Started documentation and shows installation and usage guidance.
+        # -> Navigate to http://localhost:5173/docs (direct navigation as the test step requests) and then check the resulting page for Getting Started docs and installation/usage content.
         await page.goto("http://localhost:5173/docs")
         
         # --> Test passed — verified by AI agent

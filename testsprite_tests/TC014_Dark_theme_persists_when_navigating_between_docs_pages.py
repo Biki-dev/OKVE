@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Get Started' link to open the Getting Started docs page and then confirm the dark theme persists.
+        # -> Click the 'Get Started' link (index 81) to open the Getting Started docs page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section/div/div/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'API Reference' navigation item, wait for the page to load, and verify the dark theme is still applied. Then finish the task.
+        # -> Click the 'API Reference' navigation item (index 393) to open the API Reference docs page and verify the page renders in dark theme.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/aside/div[2]/nav/a[2]').nth(0)

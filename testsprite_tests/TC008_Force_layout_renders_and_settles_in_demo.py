@@ -33,21 +33,33 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Demo' link to open the demo page and reveal the layout controls.
+        # -> Click the 'Demo' link to open the demo page and reveal layout controls (click element index 12).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'force' layout button to apply the force layout, wait for the graph to settle, then exercise a graph control to confirm interactivity.
+        # -> Click the 'force' layout control (element index 405) to trigger the force layout, then wait for the graph to settle.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
+        # -> Click the 'frontend' group filter to trigger a graph update, then click the 'React' node button to confirm the graph responds and remains interactive. After observing the response, finish the test.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'frontend' group filter (element 821), wait for the UI to settle, then click the 'React' node button (element 753) to confirm the graph updates and remains interactive. After observing the response, finish the test.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div[2]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

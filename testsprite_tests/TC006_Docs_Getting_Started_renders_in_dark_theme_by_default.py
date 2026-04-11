@@ -33,11 +33,8 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Get Started' link to navigate to /docs/getting-started, then confirm the Getting Started page renders with the dark theme applied.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/section/div/div/a').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /docs/getting-started and verify the Getting Started documentation page loads with the dark theme applied automatically.
+        await page.goto("http://localhost:5173/docs/getting-started")
         
         # --> Test passed — verified by AI agent
         frame = context.pages[-1]

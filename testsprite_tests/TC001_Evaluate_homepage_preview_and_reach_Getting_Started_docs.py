@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Get Started' primary CTA to navigate to the Getting Started documentation (click element index 84).
+        # -> Click the primary 'Get Started' action to navigate to the Getting Started documentation page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section/div/div/a').nth(0)

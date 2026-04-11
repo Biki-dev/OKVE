@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Click the 'Get Started' link on the homepage to navigate to the Getting Started docs page.
+        # -> Click the 'Get Started' link to open the Getting Started docs page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section/div/div/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'API Reference' item in the left sidebar to navigate to the API Reference docs page.
+        # -> Click the 'API Reference' item in the left sidebar to open the API Reference docs page and verify component prop documentation is displayed.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/aside/div[2]/nav/a[2]').nth(0)

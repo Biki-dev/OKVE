@@ -156,7 +156,16 @@ export const KnowledgeGraph = forwardRef<KnowledgeGraphHandle, KnowledgeGraphPro
             URL.revokeObjectURL(url)
 
             try {
-              const link = document.createElement('a')
+              const existing = document.getElementById('okve-last-export-link') as HTMLAnchorElement | null
+              const link = existing ?? document.createElement('a')
+
+              if (!existing) {
+                link.id = 'okve-last-export-link'
+                link.style.display = 'none'
+                link.setAttribute('data-okve-export', 'png')
+                document.body.appendChild(link)
+              }
+
               link.download = filename
               link.href = canvas.toDataURL('image/png')
               link.click()

@@ -33,13 +33,24 @@ async def run_test():
         # -> Navigate to http://localhost:5173/
         await page.goto("http://localhost:5173/")
         
-        # -> Open the Demo page by clicking the 'Demo' link so the live graph controls and layout options are available.
+        # -> Click the 'Demo' link to open the live demo page where the layout controls and graph preview are available.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click each layout button in order (force → radial → arc → chord), wait briefly after each to allow the graph to update, then interact with the graph controls (click the 'frontend' filter) to verify the graph remains interactive. After verification, finish the task.
+        # -> Click the 'force' layout button (index 402) as the first layout switch.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[1]/div/main/section[2]/div[2]/div[1]/div/button[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'force' layout button (index 711) to switch to the force layout, then cycle through radial (712), arc (713), and chord (714), verifying interactivity after each by interacting with the group filter (index 764) and node search input (index 759).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button').nth(0)
@@ -50,7 +61,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'arc' layout button (index 406) next, wait briefly, then click the 'chord' button (index 407), wait, and finally click the 'frontend' filter button (index 457) to verify interactivity.
+        # -> Click the 'arc' layout button, verify interactivity by clicking the 'frontend' group filter and entering 'React' into the node search input, then click the 'chord' layout button and repeat the same interactivity checks. After that, finish the task and report the result.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button[3]').nth(0)
@@ -58,25 +69,41 @@ async def run_test():
         
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[1]/div/main/section[2]/div[2]/div[1]/div/button[4]').nth(0)
+        elem = frame.locator('xpath=/html/body/div[1]/div/main/section[3]/div[2]/div/div[2]/button[1]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'arc' layout button (index 761), wait for UI update, then click 'chord' (index 763), wait, then click the 'frontend' filter button (index 835) to verify interactivity, then finish the test.
+        # -> Click the 'arc' layout (index 1119), verify interactivity by clicking the 'frontend' group filter (index 1195) and entering 'React' into the node search input (index 1015). Then click the 'chord' layout (index 1121) and repeat the same verification. After successful verification, finish the test and mark done.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'chord' layout button, wait for the graph to update, then verify interactivity by entering 'React' into the node search input and selecting the React node. After verification, finish the test and mark success.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button[4]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'frontend' filter button (index 835) to verify the graph remains interactive, then finish the test.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[1]/div/main/section[3]/div[2]/div/div[1]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('React')
+        
+        # -> Click the 'chord' layout button, wait for the graph to update, enter 'React' into the search input, and select the React node to verify the graph remains interactive.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div[2]/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/main/section[2]/div[2]/div/div/button[4]').nth(0)
         await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/main/section[3]/div[2]/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('React')
         
         # --> Test passed — verified by AI agent
         frame = context.pages[-1]
