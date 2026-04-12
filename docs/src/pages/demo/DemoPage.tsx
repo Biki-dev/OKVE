@@ -219,8 +219,6 @@ export function DemoPage() {
     return 'No metadata matches the selected metadata keys.'
   }, [metadataKeys, nodeTooltipFields, selectedNode])
 
-<<<<<<< HEAD
-=======
   const tooltipPreviewRows = useMemo(() => {
     if (!selectedNode) {
       return [] as Array<{ key: string; value: string }>
@@ -438,7 +436,6 @@ export function DemoPage() {
   const nodeCount = graphData.nodes.length
   const edgeCount = graphData.edges.length
 
->>>>>>> 36562e8 (feat(demo): add live graph editor to demo UI with validation and edge cascade handling)
   const showExportStatus = (tone: 'success' | 'error', message: string) => {
     setExportStatus({ tone, message })
   }
@@ -910,7 +907,6 @@ export function DemoPage() {
       <section className="panel demo-selected-panel">
         <div className="panel-title">Selected Node</div>
         <div className="selected-node">
-<<<<<<< HEAD
         {selectedNode ? (
           <>
             <p className="selected-node-head">
@@ -922,7 +918,6 @@ export function DemoPage() {
         ) : (
           <p>No node selected.</p>
         )}
-=======
           {selectedNode && selectedNodeDraft ? (
             <div className="demo-selected-editor" data-testid="selected-node-editor">
               <div className="demo-form-grid demo-form-grid--selected">
@@ -1023,7 +1018,6 @@ export function DemoPage() {
           ) : (
             <p>No node selected.</p>
           )}
->>>>>>> 36562e8 (feat(demo): add live graph editor to demo UI with validation and edge cascade handling)
         </div>
       </section>
     </main>
