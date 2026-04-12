@@ -3,16 +3,16 @@
   "scope": "codebase",
   "type": "frontend",
   "localEndpoint": "http://localhost:5173/",
-  "serverPort": 35945,
+  "serverPort": 41585,
   "executionArgs": {
-    "projectName": "OKVE",
+    "projectName": "okve",
     "projectPath": "/workspaces/OKVE",
     "testIds": [],
-    "additionalInstruction": "",
+    "additionalInstruction": "Test the new Live Graph Editor features on the demo page (/demo): 1) Navigate to demo page, 2) Add a new node with label and verify it appears in the graph, 3) Try adding node with empty label and verify error, 4) Add duplicate node ID and verify rejection, 5) Add an edge between nodes and verify rendering, 6) Delete a node and verify cascading edge deletion, 7) Delete all nodes and verify empty state overlay, 8) Restore sample graph and verify data repopulates",
     "serverMode": "development",
     "envs": {
-      "API_KEY": "sk-user-LiOIl6ApFFRXbuUvk51cCTRA0R8zjFXEw7RFIqtP42_a_o6FQT0mrAWT8OldgBJPa0I8oPwk2h_9HxbWVV4AFNs_qrLMmQphU4aKfK2lPfHwU-mJiHvVBtmevIFppWSimX4"
+      "API_KEY": "sk-user-tNkkS5RC-BqPEQ3F9hLqMGwRL4iZAD--GB1OKokx2NtDDyD3YKAcuy7-PdWFMC7I9PJok-zuH9YeDx-b0vloonzA998rnTXoQZQg6bYO575GwNwmEgD71GOxsq9rfRcG1PA"
     }
   },
-  "proxy": "http://9503a6b5-bba7-481c-a8c4-6bd75b5bd2b0:i6qddGu6kbuVGEc71A9Tpxft88yPakPr@tun.testsprite.com:8080"
+  "proxy": "http://0407cee3-a95d-4a0a-b077-637ff801eccc:1c95IElZc40B30yIPicg0QX3ACTieof8@tun.testsprite.com:8080"
 }

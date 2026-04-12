@@ -1,8 +1,8 @@
 [
   {
     "id": "TC001",
-    "title": "Evaluate homepage preview and reach Getting Started docs",
-    "description": "Verifies a prospective user can see the live KnowledgeGraph preview on the homepage and reach the Getting Started documentation via the primary conversion path.",
+    "title": "Evaluate homepage with live preview graph rendering",
+    "description": "Verifies the homepage loads with dark theme and the hero KnowledgeGraph preview renders from sample data without errors.",
     "category": "Homepage overview and quick start",
     "steps": [
       {
@@ -10,49 +10,20 @@
         "description": "Navigate to /"
       },
       {
-        "type": "action",
-        "description": "Wait for the hero area to finish rendering"
-      },
-      {
-        "type": "action",
-        "description": "Click the Get Started action"
+        "type": "assertion",
+        "description": "Verify dark theme styling is applied on initial load"
       },
       {
         "type": "assertion",
-        "description": "Verify the user lands on the getting started docs page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify installation and usage guidance content is displayed"
+        "description": "Verify a knowledge graph preview is displayed in the hero area"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC002",
-    "title": "Docs index redirects to Getting Started",
-    "description": "Verifies navigating to the docs root route redirects the user into the Getting Started documentation page.",
-    "category": "Documentation browser",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /docs"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the user lands on the getting started docs page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify installation and usage guidance content is displayed"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC003",
-    "title": "Homepage renders in dark theme by default",
-    "description": "Verifies that the homepage loads with dark theme applied automatically on first render.",
+    "title": "Dark theme applies on homepage load",
+    "description": "Verifies that the homepage renders with dark theme automatically on first load.",
     "category": "Dark theme initialization",
     "steps": [
       {
@@ -67,34 +38,9 @@
     "priority": "High"
   },
   {
-    "id": "TC004",
-    "title": "Homepage KnowledgeGraph preview renders without crashing",
-    "description": "Verifies the homepage hero KnowledgeGraph preview renders from static sample data without errors and remains visible.",
-    "category": "Homepage overview and quick start",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Wait for the hero graph preview to render"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a knowledge graph visualization is displayed in the hero preview"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the page remains interactive without a crash overlay"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC005",
-    "title": "Demo page renders in dark theme by default",
-    "description": "Verifies that the demo playground loads with dark theme applied automatically.",
+    "id": "TC003",
+    "title": "Dark theme applies on demo page entry",
+    "description": "Verifies that the demo page renders with dark theme automatically when entered directly.",
     "category": "Dark theme initialization",
     "steps": [
       {
@@ -109,9 +55,9 @@
     "priority": "High"
   },
   {
-    "id": "TC006",
-    "title": "Docs Getting Started renders in dark theme by default",
-    "description": "Verifies that the Getting Started documentation page loads with dark theme applied automatically.",
+    "id": "TC004",
+    "title": "Dark theme applies on docs getting started entry",
+    "description": "Verifies that the Getting Started docs page renders with dark theme automatically when entered directly.",
     "category": "Dark theme initialization",
     "steps": [
       {
@@ -126,9 +72,9 @@
     "priority": "High"
   },
   {
-    "id": "TC007",
-    "title": "Switch layouts across all modes without losing interactivity",
-    "description": "Verifies a user can switch between force, radial, arc, and chord layouts and the graph updates each time without becoming unresponsive.",
+    "id": "TC005",
+    "title": "Switch between all demo graph layouts",
+    "description": "Verifies switching among force, radial, arc, and chord layouts re-renders the graph layout each time.",
     "category": "Interactive demo playground",
     "steps": [
       {
@@ -153,40 +99,40 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the graph visualization updates after the final layout switch and remains interactive"
+        "description": "Verify the graph visualization updates to reflect the selected layout"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC008",
-    "title": "Force layout renders and settles in demo",
-    "description": "Verifies switching to the force layout in the demo updates the graph and reaches a stable interactive state.",
-    "category": "Interactive demo playground",
+    "id": "TC006",
+    "title": "Dark theme persists after navigating between routes",
+    "description": "Verifies that dark theme remains applied when navigating from the homepage to demo and then to docs.",
+    "category": "Dark theme initialization",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /demo"
+        "description": "Navigate to /"
       },
       {
         "type": "action",
-        "description": "Select the force layout"
+        "description": "Click the link to open the demo page"
       },
       {
         "type": "action",
-        "description": "Wait for the graph to settle after the layout change"
+        "description": "Click the link to open the documentation section"
       },
       {
         "type": "assertion",
-        "description": "Verify the graph visualization updates to the selected layout and remains interactive"
+        "description": "Verify the current page renders in dark theme"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC009",
-    "title": "Select a node updates the selected node panel",
-    "description": "Verifies clicking a node in the demo selects it and updates the selected-node inspection panel with that node’s details.",
+    "id": "TC007",
+    "title": "Select a node updates the Selected Node panel",
+    "description": "Verifies clicking a node in the demo graph populates the Selected Node panel with that node’s details.",
     "category": "Interactive demo playground",
     "steps": [
       {
@@ -199,15 +145,57 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the selected node panel updates to show details for a selected node"
+        "description": "Verify the Selected Node panel is populated with node details"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Enter docs from homepage via Get Started",
+    "description": "Verifies the Get Started action from the homepage takes the user to the Getting Started documentation page.",
+    "category": "Homepage overview and quick start",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the Get Started action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Getting Started documentation page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Dark theme remains after a page reload on demo",
+    "description": "Verifies that reloading the demo page keeps dark theme applied without reverting to a light theme.",
+    "category": "Dark theme initialization",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /demo"
+      },
+      {
+        "type": "action",
+        "description": "Reload the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page renders in dark theme"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC010",
-    "title": "Export PNG downloads a graph snapshot",
-    "description": "Verifies exporting the current demo graph creates a PNG file download representing the current visualization state.",
+    "title": "Export demo graph as PNG",
+    "description": "Verifies exporting from the demo creates a downloadable PNG snapshot of the current graph state.",
     "category": "Interactive demo playground",
     "steps": [
       {
@@ -216,11 +204,15 @@
       },
       {
         "type": "action",
-        "description": "Select a layout different from the default"
+        "description": "Select a non-default layout"
       },
       {
         "type": "action",
-        "description": "Click the export PNG action"
+        "description": "Click a node group chip"
+      },
+      {
+        "type": "action",
+        "description": "Click the Export PNG action"
       },
       {
         "type": "assertion",
@@ -231,62 +223,8 @@
   },
   {
     "id": "TC011",
-    "title": "Toggle tooltip fields changes tooltip content",
-    "description": "Verifies toggling node/edge/metadata tooltip options changes what information appears in tooltips when hovering graph elements.",
-    "category": "Interactive demo playground",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /demo"
-      },
-      {
-        "type": "action",
-        "description": "Toggle off at least one node tooltip field"
-      },
-      {
-        "type": "action",
-        "description": "Move the pointer over a node to show its tooltip"
-      },
-      {
-        "type": "action",
-        "description": "Toggle on a metadata key for tooltips"
-      },
-      {
-        "type": "action",
-        "description": "Move the pointer over a node to show its tooltip again"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the tooltip content changes to reflect the current tooltip field toggles"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC012",
-    "title": "Dark theme persists when navigating from homepage to demo",
-    "description": "Verifies that dark theme remains applied when the user navigates from the homepage to the demo page.",
-    "category": "Dark theme initialization",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the link to open the demo playground"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the page renders in dark theme"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC013",
-    "title": "Filter or highlight nodes by selecting a group chip",
-    "description": "Verifies selecting a node group chip changes the graph display to filter or highlight nodes belonging to that group.",
+    "title": "Filter and highlight nodes by group chip",
+    "description": "Verifies selecting a group chip filters or highlights the graph nodes by that group.",
     "category": "Interactive demo playground",
     "steps": [
       {
@@ -299,61 +237,61 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the graph display changes to reflect the selected group filtering or highlighting"
+        "description": "Verify the graph updates to show only or emphasize nodes from the selected group"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC014",
-    "title": "Dark theme persists when navigating between docs pages",
-    "description": "Verifies that dark theme remains applied while navigating within the docs section from Getting Started to API Reference.",
-    "category": "Dark theme initialization",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /docs/getting-started"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation item to open the API reference docs page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the page renders in dark theme"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC015",
-    "title": "Navigate docs via sidebar from Getting Started to API Reference",
-    "description": "Verifies a documentation reader can use the sidebar to navigate from Getting Started to API Reference and see prop documentation.",
+    "id": "TC012",
+    "title": "Redirect /docs to Getting Started",
+    "description": "Verifies navigating to the docs index route redirects the user to the Getting Started page.",
     "category": "Documentation browser",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /docs/getting-started"
+        "description": "Navigate to /docs"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Getting Started documentation page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Toggle tooltip fields changes tooltip content",
+    "description": "Verifies enabling and disabling tooltip fields and metadata keys changes what is shown when viewing a tooltip.",
+    "category": "Interactive demo playground",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /demo"
       },
       {
         "type": "action",
-        "description": "Click the sidebar navigation item for the API reference"
+        "description": "Toggle at least one node tooltip field"
+      },
+      {
+        "type": "action",
+        "description": "Toggle at least one metadata key"
+      },
+      {
+        "type": "action",
+        "description": "Hover over a node to reveal its tooltip"
       },
       {
         "type": "assertion",
-        "description": "Verify the user lands on the API reference docs page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify component prop documentation is displayed"
+        "description": "Verify the tooltip content reflects the currently selected fields and keys"
       }
     ],
     "priority": "Medium"
   },
   {
-    "id": "TC016",
-    "title": "Read examples and copy a code snippet",
-    "description": "Verifies a reader can open the Examples documentation and copy an embedded code snippet with a visible confirmation.",
+    "id": "TC014",
+    "title": "Browse Examples and copy an embedded snippet",
+    "description": "Verifies the Examples page renders code blocks and a user can copy an embedded code snippet with visible feedback.",
     "category": "Documentation browser",
     "steps": [
       {
@@ -362,23 +300,23 @@
       },
       {
         "type": "action",
-        "description": "Scroll to an example code block"
+        "description": "Scroll to a code example block"
       },
       {
         "type": "action",
-        "description": "Click the copy control for the code snippet"
+        "description": "Click the copy control for the snippet"
       },
       {
         "type": "assertion",
-        "description": "Verify a copy confirmation is visible"
+        "description": "Verify a copy-to-clipboard confirmation is visible"
       }
     ],
     "priority": "Medium"
   },
   {
-    "id": "TC017",
+    "id": "TC015",
     "title": "Copy install command from homepage",
-    "description": "Verifies a user can copy the install command from the homepage terminal control and receives a visible confirmation that copy occurred.",
+    "description": "Verifies a user can copy the install command from the homepage and receives visible copy feedback.",
     "category": "Homepage overview and quick start",
     "steps": [
       {
@@ -387,23 +325,40 @@
       },
       {
         "type": "action",
-        "description": "Scroll to the install command section"
-      },
-      {
-        "type": "action",
-        "description": "Click the copy-to-clipboard control for the install command"
+        "description": "Click the copy control for the install command"
       },
       {
         "type": "assertion",
-        "description": "Verify a copy confirmation is visible"
+        "description": "Verify a copy-to-clipboard confirmation is visible"
       }
     ],
     "priority": "Medium"
   },
   {
-    "id": "TC018",
-    "title": "Jump to an API Reference section using in-page table of contents",
-    "description": "Verifies a reader can use the API Reference table of contents to jump to a specific section within the page.",
+    "id": "TC016",
+    "title": "Navigate from Getting Started to API Reference via sidebar",
+    "description": "Verifies the sidebar navigation takes the user from Getting Started to the API Reference page.",
+    "category": "Documentation browser",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /docs/getting-started"
+      },
+      {
+        "type": "action",
+        "description": "Click the sidebar navigation item for API Reference"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the API Reference page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC017",
+    "title": "Use API Reference table of contents jump to a section",
+    "description": "Verifies clicking an in-page table of contents item scrolls to and reveals the corresponding API section.",
     "category": "Documentation browser",
     "steps": [
       {
@@ -412,57 +367,19 @@
       },
       {
         "type": "action",
-        "description": "Click a table-of-contents link for a section on the page"
+        "description": "Click an item in the in-page table of contents"
       },
       {
         "type": "assertion",
-        "description": "Verify the page scrolls to the corresponding API reference section"
+        "description": "Verify the corresponding API section is brought into view"
       }
     ],
     "priority": "Medium"
   },
   {
-    "id": "TC019",
-    "title": "Open GitHub repository from homepage",
-    "description": "Verifies a user can open the repository from the homepage and the destination loads in a new tab/window.",
-    "category": "Homepage overview and quick start",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the action that opens the project repository"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a new tab or window opens with an external site loaded"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC020",
-    "title": "Open changelog and view version history",
-    "description": "Verifies a reader can open the Changelog page and see release notes content.",
-    "category": "Documentation browser",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /docs/changelog"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify release notes and version history content is displayed"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC021",
-    "title": "Homepage parallax responds to pointer movement",
-    "description": "Verifies the homepage hero visual responds to pointer movement with parallax motion feedback.",
+    "id": "TC018",
+    "title": "Experience homepage hero parallax motion",
+    "description": "Verifies moving the pointer across the homepage hero visual produces observable parallax motion without breaking the preview.",
     "category": "Homepage overview and quick start",
     "steps": [
       {
@@ -475,7 +392,53 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the hero visual shows parallax motion feedback"
+        "description": "Verify the hero visual responds with parallax-like motion"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the knowledge graph preview remains displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Open and read Changelog via sidebar navigation",
+    "description": "Verifies the user can navigate to the Changelog page and see release notes content.",
+    "category": "Documentation browser",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /docs/getting-started"
+      },
+      {
+        "type": "action",
+        "description": "Click the sidebar navigation item for Changelog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify release notes content is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Open project repository link from homepage",
+    "description": "Verifies the homepage repository link opens the project source destination without disrupting the current page.",
+    "category": "Homepage overview and quick start",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view the project repository"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a new browser tab opens to an external site"
       }
     ],
     "priority": "Low"
