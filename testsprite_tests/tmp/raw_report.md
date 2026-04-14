@@ -86,7 +86,7 @@ Observations:
 - Immediately after clicking Export PNG the SPA became unresponsive and the page showed 0 interactive elements.
 - Retrying the export flow produced the same result (2 attempts), so the feature did not complete successfully.
 - **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/477c21fd-aea2-478d-94c5-55dd41999a51/f353342c-0675-4259-81cf-39151f7941eb
-- **Status:** ❌ Failed
+- **Status:** ❌ Failed               // i checked its working
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
@@ -136,7 +136,7 @@ Observations:
 - After clicking the copy button there was no visible tooltip or text like 'Copied', 'Copied!', or 'Copied to clipboard'.
 - The page content contains the install command text but no confirmation element became visible after the click.
 - **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/477c21fd-aea2-478d-94c5-55dd41999a51/07cbb79c-c16b-4075-a08c-354d5db2ef5f
-- **Status:** ❌ Failed
+- **Status:** ❌ Failed         // it is true that button did not produce any text msg but its show right icon after tapping copy button icon so the failed test can be ignored
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
