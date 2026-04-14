@@ -1264,6 +1264,32 @@ code {
   padding: 0;
 }
 
+.demo-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, 560px) minmax(0, 1fr);
+  align-items: start;
+  border-bottom: 1px solid var(--border);
+}
+
+.demo-editor-panel {
+  border-right: 1px solid var(--border);
+}
+
+.demo-canvas-panel {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+}
+
+.demo-library--inspectors {
+  display: grid;
+  gap: 14px;
+}
+
+.demo-library--inspectors .selected-node {
+  padding: 0;
+}
+
 .demo-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
@@ -1690,6 +1716,19 @@ code {
 
   .demo-editor-grid {
     grid-template-columns: 1fr;
+  }
+
+  .demo-workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-editor-panel {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-canvas-panel {
+    position: static;
   }
 
   .demo-hero {

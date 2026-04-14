@@ -495,10 +495,11 @@ export function DemoPage() {
         </div>
       </section>
 
-      <section className="panel demo-controls demo-editor-panel">
-        <div className="panel-title">Live Graph Editor</div>
-        <div className="demo-controls-body">
-          <div className="demo-editor-grid">
+      <div className="demo-workspace-grid">
+        <section className="panel demo-controls demo-editor-panel">
+          <div className="panel-title">Live Graph Editor</div>
+          <div className="demo-controls-body">
+            <div className="demo-editor-grid">
             <form
               className="demo-form demo-form--accent"
               onSubmit={(event) => {
@@ -863,163 +864,169 @@ export function DemoPage() {
             >
               {editorStatus.message}
             </p>
-          </div>
-        </div>
-      </section>
 
-      <section className="panel">
-        <div className="panel-title">Graph Canvas</div>
-        <div className="graph-preview graph-preview--editor">
-          {graphData.nodes.length === 0 ? (
-            <div className="demo-empty-state" data-testid="graph-empty-state">
-              <p className="demo-empty-state__eyebrow">Empty graph</p>
-              <h2>All nodes have been deleted.</h2>
-              <p>Add a node to restore the graph and reconnect it with edges.</p>
-              <button type="button" className="demo-export" onClick={resetGraph}>
-                Restore sample graph
-              </button>
-            </div>
-          ) : null}
-          <KnowledgeGraph
-            ref={graphRef}
-            data={graphData}
-            layout={layout}
-            selectedNodeId={selectedNodeId}
-            focusNodeId={focusNodeId}
-            showSearch
-            showGroupFilter
-            showStats
-            showTooltips
-            tooltipOptions={tooltipOptions}
-            height={520}
-            onNodeClick={(node: GraphNode) => {
-              setSelectedNodeId(node.id)
-              setFocusNodeId(node.id)
-            }}
-            onDeselect={() => {
-              setSelectedNodeId(undefined)
-              setFocusNodeId(undefined)
-            }}
-          />
-        </div>
-      </section>
+            <div className="demo-library demo-library--inspectors">
+              <div className="control-group">
+                <p className="control-group-title">Selected node</p>
+                <div className="selected-node">
+                  {selectedNode ? (
+                    <>
+                      <p className="selected-node-head">
+                        <strong>{selectedNode.label}</strong>
+                        <span>{selectedNode.group ?? 'none'}</span>
+                      </p>
+                      <pre>{selectedNodeDetails}</pre>
+                    </>
+                  ) : (
+                    <p>No node selected.</p>
+                  )}
+                  {selectedNode && selectedNodeDraft ? (
+                    <div className="demo-selected-editor" data-testid="selected-node-editor">
+                      <div className="demo-form-grid demo-form-grid--selected">
+                        <label className="demo-field">
+                          <span>ID</span>
+                          <input className="demo-input" value={selectedNodeDraft.id} disabled />
+                        </label>
+                        <label className="demo-field">
+                          <span>Label</span>
+                          <input
+                            className="demo-input"
+                            value={selectedNodeDraft.label}
+                            onChange={(event) => {
+                              setSelectedNodeDraft((previous) =>
+                                previous ? { ...previous, label: event.target.value } : previous,
+                              )
+                            }}
+                          />
+                        </label>
+                        <label className="demo-field">
+                          <span>Group</span>
+                          <input
+                            className="demo-input"
+                            value={selectedNodeDraft.group}
+                            onChange={(event) => {
+                              setSelectedNodeDraft((previous) =>
+                                previous ? { ...previous, group: event.target.value } : previous,
+                              )
+                            }}
+                          />
+                        </label>
+                        <label className="demo-field">
+                          <span>Size</span>
+                          <input
+                            className="demo-input"
+                            inputMode="decimal"
+                            value={selectedNodeDraft.size}
+                            onChange={(event) => {
+                              setSelectedNodeDraft((previous) =>
+                                previous ? { ...previous, size: event.target.value } : previous,
+                              )
+                            }}
+                          />
+                        </label>
+                      </div>
 
-      <section className="panel demo-selected-panel">
-        <div className="panel-title">Selected Node</div>
-        <div className="selected-node">
-        {selectedNode ? (
-          <>
-            <p className="selected-node-head">
-              <strong>{selectedNode.label}</strong>
-              <span>{selectedNode.group ?? 'none'}</span>
-            </p>
-            <pre>{selectedNodeDetails}</pre>
-          </>
-        ) : (
-          <p>No node selected.</p>
-        )}
-          {selectedNode && selectedNodeDraft ? (
-            <div className="demo-selected-editor" data-testid="selected-node-editor">
-              <div className="demo-form-grid demo-form-grid--selected">
-                <label className="demo-field">
-                  <span>ID</span>
-                  <input className="demo-input" value={selectedNodeDraft.id} disabled />
-                </label>
-                <label className="demo-field">
-                  <span>Label</span>
-                  <input
-                    className="demo-input"
-                    value={selectedNodeDraft.label}
-                    onChange={(event) => {
-                      setSelectedNodeDraft((previous) =>
-                        previous ? { ...previous, label: event.target.value } : previous,
-                      )
-                    }}
-                  />
-                </label>
-                <label className="demo-field">
-                  <span>Group</span>
-                  <input
-                    className="demo-input"
-                    value={selectedNodeDraft.group}
-                    onChange={(event) => {
-                      setSelectedNodeDraft((previous) =>
-                        previous ? { ...previous, group: event.target.value } : previous,
-                      )
-                    }}
-                  />
-                </label>
-                <label className="demo-field">
-                  <span>Size</span>
-                  <input
-                    className="demo-input"
-                    inputMode="decimal"
-                    value={selectedNodeDraft.size}
-                    onChange={(event) => {
-                      setSelectedNodeDraft((previous) =>
-                        previous ? { ...previous, size: event.target.value } : previous,
-                      )
-                    }}
-                  />
-                </label>
-              </div>
+                      <div className="demo-form-actions">
+                        <button type="button" className="demo-export" onClick={saveSelectedNode}>
+                          Save node
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-export demo-export--secondary"
+                          onClick={() => {
+                            deleteNode(selectedNode.id)
+                          }}
+                        >
+                          Delete node
+                        </button>
+                      </div>
 
-              <div className="demo-form-actions">
-                <button type="button" className="demo-export" onClick={saveSelectedNode}>
-                  Save node
-                </button>
-                <button
-                  type="button"
-                  className="demo-export demo-export--secondary"
-                  onClick={() => {
-                    deleteNode(selectedNode.id)
-                  }}
-                >
-                  Delete node
-                </button>
-              </div>
-
-              <p className="demo-inline-hint">Click a node on the canvas or in the list to edit it here.</p>
-              <pre>{selectedNodeDetails}</pre>
-            </div>
-          ) : (
-            <p>{graphData.nodes.length === 0 ? 'Add a node to start editing.' : 'No node selected.'}</p>
-          )}
-        </div>
-      </section>
-
-      <section className="panel demo-selected-panel">
-        <div className="panel-title">Node Tooltip Preview</div>
-        <div className="selected-node">
-          {selectedNode ? (
-            <div className="okve-tooltip okve-tooltip--pinned okve-tooltip--preview" data-testid="node-tooltip-preview">
-              <div className="okve-tooltip__header">
-                <strong className="okve-tooltip__title">{selectedNode.label}</strong>
-              </div>
-              {nodeTooltipFields.includes('group') && selectedNode.group ? (
-                <span className="okve-tooltip__badge">{selectedNode.group}</span>
-              ) : null}
-              <dl className="okve-tooltip__meta">
-                {tooltipPreviewRows.length > 0 ? (
-                  tooltipPreviewRows.map((row) => (
-                    <div key={`${row.key}-${row.value}`} className="okve-tooltip__meta-row">
-                      <dt>{row.key}</dt>
-                      <dd>{row.value}</dd>
+                      <p className="demo-inline-hint">Click a node on the canvas or in the list to edit it here.</p>
+                      <pre>{selectedNodeDetails}</pre>
                     </div>
-                  ))
-                ) : (
-                  <div className="okve-tooltip__meta-row">
-                    <dt>state</dt>
-                    <dd>No tooltip fields selected</dd>
-                  </div>
-                )}
-              </dl>
+                  ) : (
+                    <p>{graphData.nodes.length === 0 ? 'Add a node to start editing.' : 'No node selected.'}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="control-group">
+                <p className="control-group-title">Node tooltip preview</p>
+                <div className="selected-node">
+                  {selectedNode ? (
+                    <div
+                      className="okve-tooltip okve-tooltip--pinned okve-tooltip--preview"
+                      data-testid="node-tooltip-preview"
+                    >
+                      <div className="okve-tooltip__header">
+                        <strong className="okve-tooltip__title">{selectedNode.label}</strong>
+                      </div>
+                      {nodeTooltipFields.includes('group') && selectedNode.group ? (
+                        <span className="okve-tooltip__badge">{selectedNode.group}</span>
+                      ) : null}
+                      <dl className="okve-tooltip__meta">
+                        {tooltipPreviewRows.length > 0 ? (
+                          tooltipPreviewRows.map((row) => (
+                            <div key={`${row.key}-${row.value}`} className="okve-tooltip__meta-row">
+                              <dt>{row.key}</dt>
+                              <dd>{row.value}</dd>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="okve-tooltip__meta-row">
+                            <dt>state</dt>
+                            <dd>No tooltip fields selected</dd>
+                          </div>
+                        )}
+                      </dl>
+                    </div>
+                  ) : (
+                    <p>No node selected.</p>
+                  )}
+                </div>
+              </div>
             </div>
-          ) : (
-            <p>No node selected.</p>
-          )}
-        </div>
-      </section>
+          </div>
+          </div>
+        </section>
+
+        <section className="panel demo-canvas-panel">
+          <div className="panel-title">Graph Canvas</div>
+          <div className="graph-preview graph-preview--editor">
+            {graphData.nodes.length === 0 ? (
+              <div className="demo-empty-state" data-testid="graph-empty-state">
+                <p className="demo-empty-state__eyebrow">Empty graph</p>
+                <h2>All nodes have been deleted.</h2>
+                <p>Add a node to restore the graph and reconnect it with edges.</p>
+                <button type="button" className="demo-export" onClick={resetGraph}>
+                  Restore sample graph
+                </button>
+              </div>
+            ) : null}
+            <KnowledgeGraph
+              ref={graphRef}
+              data={graphData}
+              layout={layout}
+              selectedNodeId={selectedNodeId}
+              focusNodeId={focusNodeId}
+              showSearch
+              showGroupFilter
+              showStats
+              showTooltips
+              tooltipOptions={tooltipOptions}
+              height={520}
+              onNodeClick={(node: GraphNode) => {
+                setSelectedNodeId(node.id)
+                setFocusNodeId(node.id)
+              }}
+              onDeselect={() => {
+                setSelectedNodeId(undefined)
+                setFocusNodeId(undefined)
+              }}
+            />
+          </div>
+        </section>
+      </div>
     </main>
   )
 }
