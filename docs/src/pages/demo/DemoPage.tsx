@@ -90,6 +90,17 @@ function formatMetadataValue(value: unknown) {
   return String(value)
 }
 
+function formatTimestampForFilename(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+
+  return `${year}${month}${day}-${hours}${minutes}${seconds}`
+}
+
 export function DemoPage() {
   const graphRef = useRef<KnowledgeGraphHandle | null>(null)
   const [graphData, setGraphData] = useState<GraphData>(() => cloneGraphData(sampleData))
@@ -450,6 +461,41 @@ export function DemoPage() {
     showExportStatus('success', 'PNG export started. Check your downloads.')
   }
 
+  const handleExportJson = () => {
+    try {
+      const now = new Date()
+      const fileName = `okve-demo-state-${formatTimestampForFilename(now)}.json`
+      const payload = {
+        exportedAt: now.toISOString(),
+        ...cloneGraphData(graphData),
+        settings: {
+          layout,
+          selectedNodeId,
+          focusNodeId,
+          tooltip: {
+            nodeFields: [...nodeTooltipFields],
+            edgeFields: [...edgeTooltipFields],
+            metadataKeys: [...metadataKeys],
+            maxRows: tooltipOptions.maxRows,
+          },
+        },
+      }
+
+      const json = JSON.stringify(payload, null, 2)
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = fileName
+      link.click()
+      URL.revokeObjectURL(url)
+
+      showExportStatus('success', `JSON export complete: ${fileName}`)
+    } catch {
+      showExportStatus('error', 'JSON export failed. Please try again.')
+    }
+  }
+
   const toggleNodeField = (field: NodeTooltipField) => {
     setNodeTooltipFields((previous) =>
       previous.includes(field) ? previous.filter((value) => value !== field) : [...previous, field],
@@ -775,6 +821,10 @@ export function DemoPage() {
 
               <button type="button" className="demo-export demo-export--secondary" onClick={handleExportPng}>
                 Export PNG
+              </button>
+
+              <button type="button" className="demo-export demo-export--secondary" onClick={handleExportJson}>
+                Export JSON
               </button>
               <p
                 className={`demo-export-status demo-export-status--${exportStatus.tone}`}

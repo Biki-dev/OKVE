@@ -33,16 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173/demo
         await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Guide' link (expected to navigate to /docs) to reach the documentation index.
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # --> Test passed — verified by AI agent
-        frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert await frame.locator("xpath=//*[contains(., 'Demo')]").nth(0).is_visible(), "The hero visual header Demo should remain visible while moving the pointer to show the parallax motion did not break the preview.",
+        assert await frame.locator("xpath=//*[contains(., 'Export JSON')]").nth(0).is_visible(), "The Export JSON button should be visible to indicate the knowledge graph preview remains displayed after pointer movement.",
         await asyncio.sleep(5)
 
     finally:

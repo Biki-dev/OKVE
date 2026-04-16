@@ -33,10 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:4173/demo
         await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Guide' link (expected to navigate to /docs) to reach the documentation index.
+        # -> Navigate to /docs/api-reference (immediately), then locate and click an in-page table-of-contents item to verify the corresponding API section is brought into view.
+        await page.goto("http://localhost:4173/docs/api-reference")
+        
+        # -> Click the 'Installation' item in the On this page table of contents (index 1198) to scroll to the Installation section, then confirm the Installation section heading is visible in the viewport.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/aside[2]/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

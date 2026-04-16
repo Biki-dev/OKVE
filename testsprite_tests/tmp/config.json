@@ -1,18 +1,18 @@
 {
   "status": "init",
-  "scope": "codebase",
+  "scope": "diff",
   "type": "frontend",
-  "localEndpoint": "http://localhost:5173/",
-  "serverPort": 39471,
+  "localEndpoint": "http://localhost:4173/demo",
+  "serverPort": 38651,
   "executionArgs": {
     "projectName": "OKVE",
     "projectPath": "/workspaces/OKVE",
     "testIds": [],
-    "additionalInstruction": "Validate the demo page reorganization: editing controls are organized in the left panel and the graph canvas live-updates on the right. Prioritize demo interactions for add/edit/delete node/edge and tooltip preview behavior.",
+    "additionalInstruction": "Validate recent demo page changes on /demo: compact Nodes/Edges settings panel layout remains usable, add/edit/delete node and edge interactions still work, and new Export JSON button downloads current graph data and settings after edits. Also verify existing Export PNG still works and no regressions in tooltip preview/field toggles.",
     "serverMode": "production",
     "envs": {
       "API_KEY": "sk-user-tNkkS5RC-BqPEQ3F9hLqMGwRL4iZAD--GB1OKokx2NtDDyD3YKAcuy7-PdWFMC7I9PJok-zuH9YeDx-b0vloonzA998rnTXoQZQg6bYO575GwNwmEgD71GOxsq9rfRcG1PA"
     }
   },
-  "proxy": "http://dcc95be9-d345-4aaa-9d4e-4a6e1d770d2f:4ZAteehr6Z3oq8dYeu8BCRveqNpp61rF@tun.testsprite.com:8080"
+  "proxy": "http://f1153a60-ca7f-4e57-8a84-8194f112dec8:mCvE38spRUOZ6FJbiNVQaZdBZN7WUXBR@tun.testsprite.com:8080"
 }

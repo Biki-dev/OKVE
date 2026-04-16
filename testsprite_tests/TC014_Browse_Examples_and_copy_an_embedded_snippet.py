@@ -30,13 +30,22 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Navigate directly to /docs/examples to find the Examples page (use direct navigation because there are no clickable links on the current page).
-        await page.goto("http://localhost:5173/docs/examples")
+        # -> Open the Guide/docs area to find the Examples page by clicking the 'Guide' link (element 39).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first 'Copy' button (index 464) for the minimal controlled setup snippet and then observe the page for a visible copy-to-clipboard confirmation.
+        # -> Click the 'Examples' link in the docs (sidebar/top) to open the Examples page so we can inspect its code blocks.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/aside/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Copy' button for the first code snippet (interactive element index 1063) to trigger copy-to-clipboard and then check for visible confirmation (button label change or toast).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/main/article/section[2]/div/div/button').nth(0)

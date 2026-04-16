@@ -212,7 +212,10 @@ a {
 }
 .demo-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+  padding-right: 4px;
 }
 .demo-list-empty {
   margin: 0;
@@ -221,21 +224,24 @@ a {
 }
 .demo-list-item {
   display: grid;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   background: color-mix(in hsl, var(--bg-tertiary) 88%, #05070d);
-  padding: 12px;
+  padding: 10px;
 }
 .demo-list-item__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 .demo-list-item__select {
-  display: grid;
-  gap: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   text-align: left;
   padding: 0;
   border: 0;
@@ -245,20 +251,25 @@ a {
   cursor: pointer;
 }
 .demo-list-item__select strong {
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.2;
 }
 .demo-list-item__select span {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 7px;
 }
 .demo-list-item__delete {
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text-secondary);
   border-radius: 999px;
-  padding: 5px 10px;
+  padding: 4px 9px;
   font: inherit;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.1;
   cursor: pointer;
   transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
@@ -272,6 +283,31 @@ a {
 }
 .demo-list-item--edge .demo-field--full {
   grid-column: 1 / -1;
+}
+.demo-list--edges {
+  max-height: 320px;
+}
+.demo-list-item--edge {
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+.demo-form-grid--edge-edit {
+  grid-template-columns: 1fr 1fr minmax(140px, 1.2fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+.demo-list-item--edge .demo-field span {
+  font-size: 10px;
+}
+.demo-list-item--edge .demo-field--full {
+  grid-column: auto;
+}
+.demo-list-item--edge .demo-input {
+  padding: 8px 10px;
+}
+.demo-list-item--edge .demo-toggle {
+  padding-top: 0;
+  align-self: center;
 }
 .demo-empty-state {
   position: absolute;
@@ -1716,6 +1752,14 @@ code {
 
   .demo-editor-grid {
     grid-template-columns: 1fr;
+  }
+
+  .demo-form-grid--edge-edit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .demo-list-item--edge .demo-field--full {
+    grid-column: 1 / -1;
   }
 
   .demo-workspace-grid {

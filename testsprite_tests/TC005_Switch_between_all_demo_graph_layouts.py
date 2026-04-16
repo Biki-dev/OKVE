@@ -30,24 +30,10 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Navigate to /demo and wait for the page to finish loading so I can locate the layout selector (force, radial, arc, chord).
-        await page.goto("http://localhost:5173/demo")
-        
-        # -> Click the 'force' button, wait for the graph to re-render, then click 'radial', 'arc', and 'chord' in order, waiting after each to allow the canvas to update. Verify the graph canvas remains present and updates visually after each click.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/section[1]/div[2]/div/div[2]/div[1]/button[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click 'force' (index 2421), wait for the graph to update, then click 'radial' (2423), 'arc' (2425), and 'chord' (2427), waiting after each to allow re-render. After the final update, finish the test.
+        # -> Click the 'force' layout button (index 405) to trigger a re-render of the graph, then verify the canvas updates; proceed to radial (407), arc (409), and chord (411) with brief waits between clicks.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div/button').nth(0)
@@ -58,18 +44,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'arc' layout (index 2425), wait for the graph to update, then click the 'chord' layout (index 2427), wait for the graph to update, verify the canvas visually updates after each, then finish the test.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div/button[3]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[1]/div/main/div/section[1]/div[2]/div/div[2]/div[1]/button[4]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'arc' layout button (index 3301), wait for the graph to re-render, then click the 'chord' layout button (index 3303), wait for the graph to re-render, then finish the test.
+        # -> Click the 'arc' layout button (index 409) to trigger a re-render, wait for the UI to settle, then click the 'chord' layout button (index 411) and verify the canvas updates.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div/button[3]').nth(0)

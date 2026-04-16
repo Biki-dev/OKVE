@@ -30,16 +30,10 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Demo' navigation link to open the demo page (element index 7).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'React' node (element index 461) to select it, then capture the Selected Node panel contents to verify it populated with that node's details.
+        # -> Click the 'React' node entry (element index 194) to trigger population of the Selected Node panel with that node's details.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div/div/div/article/button').nth(0)

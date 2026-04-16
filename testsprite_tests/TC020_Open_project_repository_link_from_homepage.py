@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173/demo
         await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Guide' link (expected to navigate to /docs) to reach the documentation index.
+        # -> Click the GitHub repository link (element index 94) to open the project source in a new tab and confirm the current page remains on /demo.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div[2]/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

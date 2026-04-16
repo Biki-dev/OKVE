@@ -30,33 +30,34 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Navigate to the demo page at /demo so we can access the demo controls (left panel) and graph canvas (right).
-        await page.goto("http://localhost:5173/demo")
-        
-        # -> Open the 'React' node details by clicking its button to locate tooltip fields and metadata key controls.
+        # -> Open the React node details/editor so I can locate tooltip field toggles and metadata key toggles.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div/div/div/article/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the 'React' node details panel so we can locate tooltip and metadata controls.
+        # -> Click the 'size' node tooltip field toggle, click the 'reason' metadata key toggle, re-select the React node to trigger tooltip preview, then wait for the UI to update so we can inspect the tooltip content.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div[2]/button[3]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div[2]/div[4]/button[3]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/div/section/div[2]/div/div/div/div/article/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Locate the tooltip-related controls and metadata-key toggles in the React node details panel and list their labels, control types, indexes, and current states.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[1]/div/main/div/section[1]/div[2]/div/div[1]/div[1]/div/article[1]/button[1]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'React')]").nth(0).is_visible(), "The tooltip should show the node label 'React' after enabling tooltip fields and metadata keys and hovering the node."
+        assert await frame.locator("xpath=//*[contains(., 'size') and contains(., 'reason')]").nth(0).is_visible(), "The tooltip should display the size field and the reason metadata key after toggling them"
         await asyncio.sleep(5)
 
     finally:

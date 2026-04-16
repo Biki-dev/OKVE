@@ -30,31 +30,18 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Demo' link to open the demo page, then wait for the page to finish rendering.
+        # -> Click the 'language' group chip to filter/highlight nodes for that group, then observe the graph canvas and node list for changes.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/main/div/section[2]/div[2]/div/div[2]/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'frontend' group chip (the blue chip) in the Graph Canvas to trigger group filtering/highlighting of nodes.
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/section[2]/div[2]/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'frontend' group chip (index 2324) and observe whether the graph filters or highlights nodes from that group; then report the result.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/section[2]/div[2]/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # --> Test passed — verified by AI agent
-        frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert await frame.locator("xpath=//*[contains(., 'language')]").nth(0).is_visible(), "The graph should show nodes from the 'language' group after selecting the group chip"
         await asyncio.sleep(5)
 
     finally:

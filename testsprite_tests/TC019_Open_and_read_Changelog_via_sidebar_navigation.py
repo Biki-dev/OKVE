@@ -33,10 +33,16 @@ async def run_test():
         # -> Navigate to http://localhost:4173/demo
         await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Guide' link (expected to navigate to /docs) to reach the documentation index.
+        # -> Click the 'Guide' link in the header to open the documentation index so we can find the Changelog entry.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Changelog' link in the left sidebar to open the changelog page.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/aside/div[2]/nav/a[4]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

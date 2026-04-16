@@ -30,10 +30,16 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Get Started' link on the homepage (element index 81).
+        # -> Click the homepage logo (or home link) to navigate to the site homepage so I can find the Get Started action.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Get Started' link on the homepage and verify the Getting Started documentation page is displayed.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/section/div/div/a').nth(0)

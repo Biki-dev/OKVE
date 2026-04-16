@@ -30,16 +30,89 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5173/
-        await page.goto("http://localhost:5173/")
+        # -> Navigate to http://localhost:4173/demo
+        await page.goto("http://localhost:4173/demo")
         
-        # -> Click the 'Demo' link to open the demo page and verify the dark theme persists there.
+        # -> Click the home link to navigate to the homepage and verify the dark theme remains applied there.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Guide' link to open the documentation/guide page (element index 1179) and then verify the docs page renders with the dark theme applied.
+        # -> Navigate to the homepage (/) and verify the dark theme is applied there
+        await page.goto("http://localhost:4173/")
+        
+        await page.goto("http://localhost:4173/demo")
+        
+        # -> Click the home link (index 1965) to navigate to the homepage and check that the dark theme is applied there.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Navigate to the homepage (/) and verify the dark theme is applied there as the first step of the sequence.
+        await page.goto("http://localhost:4173/")
+        
+        await page.goto("http://localhost:4173/demo")
+        
+        # -> Click the homepage link (index 3840) to navigate to / and verify the dark theme remains applied there.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the homepage link (index 3840) to navigate to / and verify that the homepage renders in dark theme.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the Demo link to open /demo and verify the dark theme, then open the Guide (docs) and verify dark theme there, then stop.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the homepage link (index 3840) to navigate to / and verify the dark theme, then navigate to Demo (index 3797) and verify, then navigate back to Guide (index 3796) and verify, then finish.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Navigate to the homepage (/) to confirm the dark theme is applied, then continue by clicking Demo and then Guide to verify theme persists across the flow.
+        await page.goto("http://localhost:4173/")
+        
+        # -> Click the Demo link (index 8021) to open /demo and verify the dark theme, then click the Guide link (index 8020) to open docs and verify the dark theme, then finish.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/div/nav/a').nth(0)
